@@ -296,12 +296,47 @@ contract Bank is Ownable {
         emit Received(msg.sender, msg.value);
     }
 
+    // ******************************** NFT Minting ***********************************
+
+    function mintNFT(
+        address _to,
+        uint256 _tokenId,
+        uint64 _riskScore,
+        uint64 _riskFactor,
+        uint64 _interestRate,
+        uint64 _userMaxTier,
+        uint256 _flatfee,
+        string memory _uri
+    ) public payable {
+        uint256 fee;
+        uint256 ETHprice = oracle.priceOfETH();
+        uint256 ETHinUSD = SafeMath.div(100000000000000000000, ETHprice);
+
+        fee = SafeMath.mul(ETHinUSD, flatFeeNFT);
+        require(msg.value >= fee, "Amount sent to fund NFT was insufficient.");
+        NFT.mintBorrower(
+            _to,
+            _tokenId,
+            _riskScore,
+            _riskFactor,
+            _interestRate,
+            _userMaxTier,
+            _flatfee,
+            _uri
+        );
+    }
+
     // ******************************** Fee mechanism ***********************************
 
     /**
      * @dev
      */
     uint256 public feeThreshold;
+
+    /**
+     * @dev
+     */
+    uint256 public flatFeeNFT;
 
     /**
      * @dev Variable for staking flat fee.

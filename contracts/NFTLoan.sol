@@ -97,7 +97,6 @@ contract NFTLoan {
     }
 
     function mintBorrower(
-        // Only Oracle
         address _to,
         uint256 _tokenId,
         uint64 _riskScore,
