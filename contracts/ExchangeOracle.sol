@@ -321,6 +321,10 @@ contract ExchangeOracle is Ownable {
         );
     }
 
+    function isDev(address _caller) public view returns (bool) {
+        return devBook[_caller].active;
+    }
+
     /**
      * @dev Resets all the dev contract votes to false and takes a parameter value, status and
      * address of the token. The string of the function accepting this change must also

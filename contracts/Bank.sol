@@ -297,12 +297,10 @@ contract Bank is Ownable {
     }
 
     // ******************************** NFT Minting ***********************************
-
-    modifier helloWorld() {
-        _;
+    function onlyDev() internal returns (bool) {
+        bool allowed = oracle.isDev(msg.sender);
+        return allowed;
     }
-
-    function onlyDev() internal returns (bool) {}
 
     function mintNFT(
         address _to,
@@ -313,7 +311,7 @@ contract Bank is Ownable {
         uint64 _userMaxTier,
         uint256 _flatfee,
         string memory _uri
-    ) public payable onlyDev {
+    ) public payable {
         uint256 fee;
         uint256 ETHprice = oracle.priceOfETH();
         uint256 ETHinUSD = SafeMath.div(100000000000000000000, ETHprice);
@@ -332,7 +330,24 @@ contract Bank is Ownable {
         );
     }
 
-    function updateNFT() public payable {}
+    function updateNFT(
+        address _to,
+        uint64 _riskScore,
+        uint64 _riskFactor,
+        uint64 _interestRate,
+        uint64 _userMaxTier,
+        uint256 _flatfee
+    ) public {
+        require(onlyDev() == true, "Access denied");
+        NFT.updateBorrower(
+            _to,
+            _riskScore,
+            _riskFactor,
+            _interestRate,
+            _userMaxTier,
+            _flatfee
+        );
+    }
 
     // ******************************** Fee mechanism ***********************************
 
