@@ -4,14 +4,30 @@ import "./interfaces/SafeMath.sol";
 import "./ExchangeOracle.sol";
 
 contract NFTLoan {
+
+    /**
+     * @dev Variable gives the NFTs name
+     */
     string internal nftName;
-
+    
+    /**
+     * @dev Creates a mapping of IDs of owner
+     */
     mapping(uint256 => address) internal ownerId;
-
+    
+    /**
+     * @dev Creates mapping of User Data
+     */
     mapping(address => Data) private userData;
-
+    
+    /**
+     * @dev Creates mapping of owner address to gives an a count
+     */
     mapping(address => uint256) private ownerToNFTokenCount;
-
+    
+    /**
+     * @dev Creates a
+     */
     mapping(uint256 => string) private idToUri;
 
     ExchangeOracle oracle;
@@ -31,12 +47,18 @@ contract NFTLoan {
         require(tokenOwner == msg.sender);
         _;
     }
-
+    
+    /**
+     * @dev Makes sure that tokenID of owner has an address.
+     * To validate the NFT token
+      */
     modifier validNFToken(uint256 _tokenId) {
         require(ownerId[_tokenId] != address(0));
         _;
     }
-
+    /**
+     * @dev Makes sure that the user is valid with oracle and treasury
+     */
     modifier validEntry() {
         require(msg.sender == address(oracle) || msg.sender == Treasury);
         _;
@@ -53,7 +75,10 @@ contract NFTLoan {
         oracle = ExchangeOracle(_oracle);
         Treasury = _treasury;
     }
-
+    
+    /**
+     * @dev Gets balance of owners address
+     */
     function balanceOf(address _owner) external view returns (uint256) {
         require(_owner != address(0));
         return _getOwnerNFTCount(_owner);
@@ -86,7 +111,10 @@ contract NFTLoan {
     {
         idToUri[_tokenId] = _uri;
     }
-
+    
+    /**
+     * @dev Mints the NFT itself
+     */
     function _mint(address _to, uint256 _tokenId) internal {
         require(_to != address(0));
         require(ownerId[_tokenId] == address(0));
@@ -95,7 +123,10 @@ contract NFTLoan {
 
         emit Transfer(address(this), _to, _tokenId);
     }
-
+    
+    /**
+     * @dev Mints the Borrower information into the NFT
+     */
     function mintBorrower(
         address _to,
         uint256 _tokenId,
@@ -117,7 +148,10 @@ contract NFTLoan {
             0
         );
     }
-
+    
+    /**
+     * @dev Updates the borrowers information
+     */
     function updateBorrower(
         address _to,
         uint64 _riskScore,
@@ -135,20 +169,29 @@ contract NFTLoan {
             0
         );
     }
-
+    
+    /**
+     * @dev Adds NFT to wallet address
+     */
     function _addNFToken(address _to, uint256 _tokenId) internal {
         require(ownerId[_tokenId] == address(0));
 
         ownerId[_tokenId] = _to;
         ownerToNFTokenCount[_to] = ownerToNFTokenCount[_to] + 1;
     }
-
+    
+    /**
+     * @dev Removes NFT from the wallet address
+     */
     function _removeNFToken(address _from, uint256 _tokenId) internal {
         require(ownerId[_tokenId] == _from);
         ownerToNFTokenCount[_from] = ownerToNFTokenCount[_from] - 1;
         delete ownerId[_tokenId];
     }
-
+    
+    /**
+     * @dev Gets NFT Count of wallet address of owner
+     */
     function _getOwnerNFTCount(address _owner) internal view returns (uint256) {
         return ownerToNFTokenCount[_owner];
     }
@@ -156,7 +199,10 @@ contract NFTLoan {
     function strikeBorrower(address _from) public validEntry {
         userData[_from].riskScore = SafeMath.add(userData[_from].riskScore, 1);
     }
-
+    
+    /**
+     * @dev Function gets User address and returns all data from user into uint
+     */
     function getUser(address _from)
         public
         view

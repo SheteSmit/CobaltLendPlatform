@@ -9,16 +9,32 @@ import "./ExchangeOracle.sol";
 import "./NFTLoan.sol";
 
 contract Lottery {
+
+    /**
+     * @dev Variable of address of the API
+     */
     address private API;
-
+    
+    /**
+     * @dev Variable gives the lottery status 
+     */
     bool public lotteryStatus;
-
+    
+    /**
+     * @dev Variable that gives the total fee balance of the lottery
+     */
     uint256 totalFeeBalance;
-
+    
+    /**
+     * @dev Function sets the Api of the address
+     */
     function setAPI(address _newAPI) public {
         API = _newAPI;
     } // Only dev contract // Deployed on Binance
-
+    
+    /**
+     * @dev Function sets the status of the lottery
+     */
     function setLottery(bool _status) public {
         lotteryStatus = _status;
     } // Only dev contract // Deployed on Binance
@@ -37,7 +53,11 @@ contract Lottery {
     }
 
     mapping(uint256 => Lotteryticket) lotteryBook;
-
+    
+    /**
+     * @dev Function gets lottery tickets and returns 
+     * address of lottery ticket participants
+     */
     function getLotteryParticipants(uint256 _lotteryTicket)
         public
         view
@@ -45,7 +65,11 @@ contract Lottery {
     {
         return lotteryBook[_lotteryTicket].participants;
     }
-
+    
+    /**
+     * @dev Function gets winning lottery ticket and returns winning lottery 
+     * tickets address
+     */
     function getLotteryWinners(uint256 _lotteryTicket)
         public
         view
@@ -53,7 +77,10 @@ contract Lottery {
     {
         return lotteryBook[_lotteryTicket].winners;
     }
-
+    
+    /**
+     * @dev Modifier gives parameters of a valid lottery ticket
+     */
     modifier validEntry(uint256 _lotteryTicket) {
         require(lotteryStatus == true, "Lottery is currently offline");
         require(
@@ -67,7 +94,10 @@ contract Lottery {
         );
         _;
     }
-
+    
+    /**
+     * @dev Function creates a ticket for the lottery system
+     */
     function createTicket(
         uint256 _numParticipants,
         uint256 _numWinners,
@@ -85,7 +115,8 @@ contract Lottery {
             false
         );
     } // Only dev contract // Deployed on Binance
-
+    
+    
     function buyStakingTicket(uint256 _lotteryTicket)
         public
         payable
@@ -94,7 +125,10 @@ contract Lottery {
         lotteryBook[_lotteryTicket].participants.push(msg.sender);
         totalFeeBalance = SafeMath.add(totalFeeBalance, msg.value);
     }
-
+    
+    /**
+     * @dev Function allows user to buy open slot of a lottery ticket
+     */
     function buyLotteryTicket(uint256 _lotteryTicket, uint256 _slotNumber)
         public
         payable
@@ -112,7 +146,10 @@ contract Lottery {
         lotteryBook[_lotteryTicket].participants[_slotNumber] = msg.sender;
         totalFeeBalance = SafeMath.add(totalFeeBalance, msg.value);
     }
-
+    
+    /**
+     * @dev Function changes the status of lottery ticket to the winner
+     */
     function setLotteryWinners(
         uint256[] memory _winnerIndex,
         uint256 _lotteryTicket
@@ -130,6 +167,9 @@ contract Lottery {
     } // Only dev contract // Deployed on Binance
 
     // ************************** Contract fee withdraw *************************
-
+    
+    /**
+     * @dev Withdraw funds of the lottery
+     */
     function withdrawFunds() public payable {}
 }
