@@ -298,6 +298,12 @@ contract Bank is Ownable {
 
     // ******************************** NFT Minting ***********************************
 
+    modifier helloWorld() {
+        _;
+    }
+
+    function onlyDev() internal returns (bool) {}
+
     function mintNFT(
         address _to,
         uint256 _tokenId,
@@ -307,7 +313,7 @@ contract Bank is Ownable {
         uint64 _userMaxTier,
         uint256 _flatfee,
         string memory _uri
-    ) public payable {
+    ) public payable onlyDev {
         uint256 fee;
         uint256 ETHprice = oracle.priceOfETH();
         uint256 ETHinUSD = SafeMath.div(100000000000000000000, ETHprice);
@@ -325,6 +331,8 @@ contract Bank is Ownable {
             _uri
         );
     }
+
+    function updateNFT() public payable {}
 
     // ******************************** Fee mechanism ***********************************
 
