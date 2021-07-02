@@ -98,29 +98,29 @@ contract Bank is Ownable {
 
     /**
      * @dev Function terminates all staking instances and allows early balance withdrewal
-     * @param _bool true terminates all contract instances and allows users to withdraw
      * @notice This action can only be perform under dev vote.
      */
-    function setStakingTermination(bool _bool) public {
-        terminateStaking = _bool;
+    function setStakingTermination() public {
+        bool status = oracle.boolChange(50, "setStakingTermination");
+        terminateStaking = status;
     }
 
     /**
      * @dev Setter function to turn support for other tokens.
      * @notice This action can only be perform under dev vote.
-     * @param _bool true turns on other token support for staking reward, false off
      */
-    function setTokenSupport(bool _bool) public {
-        multipleTokenSupport = _bool;
+    function setTokenSupport() public {
+        bool status = oracle.boolChange(50, "setTokenSupport");
+        multipleTokenSupport = status;
     }
 
     /**
      * @dev Setter function to turn staking status on and off.
      * @notice This action can only be perform under dev vote.
-     * @param _bool value true - on, false - off.
      */
-    function setStakingStatus(bool _bool) public {
-        stakingStatus = _bool;
+    function setStakingStatus() public {
+        bool status = oracle.boolChange(50, "setStakingStatus");
+        stakingStatus = status;
     }
 
     /**
@@ -137,16 +137,19 @@ contract Bank is Ownable {
         );
     }
 
-    function setToken(address _newToken) public {
-        token = IERC20(_newToken);
+    function setToken() public {
+        address newToken = oracle.addressChange(50, "setToken");
+        token = IERC20(newToken);
     }
 
-    function setOracle(address _newOracle) public {
-        oracle = ExchangeOracle(_newOracle);
+    function setOracle() public {
+        address newOracle = oracle.addressChange(50, "setOracle");
+        oracle = ExchangeOracle(newOracle);
     }
 
-    function setNFT(address _newNFT) public {
-        NFT = NFTLoan(_newNFT);
+    function setNFT() public {
+        address newNFT = oracle.addressChange(50, "setNFT");
+        NFT = NFTLoan(newNFT);
     }
 
     function testNFTContract()
@@ -169,6 +172,7 @@ contract Bank is Ownable {
         ) = NFT.getUser(msg.sender);
     }
 
+    // ONLY TESTING
     function assetsMigration() public payable {
         uint256 totalTokenBalance = token.balanceOf(address(this));
         uint256 totalETHBalance = address(this).balance;
@@ -297,10 +301,6 @@ contract Bank is Ownable {
     }
 
     // ******************************** NFT Minting ***********************************
-    function onlyDev() internal returns (bool) {
-        bool allowed = oracle.isDev(msg.sender);
-        return allowed;
-    }
 
     function mintNFT(
         address _to,
@@ -318,6 +318,8 @@ contract Bank is Ownable {
 
         fee = SafeMath.mul(ETHinUSD, flatFeeNFT);
         require(msg.value >= fee, "Amount sent to fund NFT was insufficient.");
+        totalFeeBalance = SafeMath.add(totalFeeBalance, fee);
+
         NFT.mintBorrower(
             _to,
             _tokenId,
@@ -338,7 +340,7 @@ contract Bank is Ownable {
         uint64 _userMaxTier,
         uint256 _flatfee
     ) public {
-        require(onlyDev() == true, "Access denied");
+        require(oracle.isDev(msg.sender) == true, "Access denied");
         NFT.updateBorrower(
             _to,
             _riskScore,
@@ -374,7 +376,7 @@ contract Bank is Ownable {
     /**
      * @dev
      */
-    address WithdrawContract;
+    address withdrawAddress;
 
     /**
      * @dev Saving running fee total
@@ -383,7 +385,7 @@ contract Bank is Ownable {
 
     modifier onlyTreasury {
         require(
-            msg.sender == WithdrawContract,
+            msg.sender == withdrawAddress,
             "This address can't withdraw funds from treasury"
         );
         _;
@@ -392,8 +394,9 @@ contract Bank is Ownable {
     /**
      * @dev
      */
-    function setContract(address _treasuryAddress) public {
-        WithdrawContract = _treasuryAddress;
+    function setContract() public {
+        address newWithdrawAddress = oracle.addressChange(50, "setContract");
+        withdrawAddress = newWithdrawAddress;
     }
 
     /**
@@ -417,15 +420,20 @@ contract Bank is Ownable {
 
     /**
      * @dev Setter for staking flat fee.
-     * @param _newFee new uint fee value.
      * @notice This action can only be perform under dev vote.
      */
-    function newFlatFee(uint256 _newFee) public {
-        flatFee = _newFee;
+    function newFlatFee() public {
+        uint256 newFee = oracle.numberChange(50, "newFlatFee");
+        flatFee = newFee;
     }
 
-    function newPercentFee(uint256 _newFee) public {
-        percentFee = _newFee;
+    /**
+     * @dev Setter for staking percent fee.
+     * @notice This action can only be perform under dev vote.
+     */
+    function newPercentFee() public {
+        uint256 newFee = oracle.numberChange(50, "newPercentFee");
+        percentFee = newFee;
     }
 
     // **************************************** Events ************************************************
@@ -484,10 +492,10 @@ contract Bank is Ownable {
      * @dev Setter function to change the contract address for the lottery connected to
      * staking.
      * @notice This action can only be perform under dev vote.
-     * @param _lotteryAddress address of lottery contract picking winners.
      */
-    function setLotteryContract(address _lotteryAddress) public {
-        Lottery = _lotteryAddress;
+    function setLotteryContract() public {
+        address newLottery = oracle.addressChange(50, "setLotteryContract");
+        Lottery = newLottery;
     }
 
     /**
@@ -985,28 +993,26 @@ contract Bank is Ownable {
      * is higher than current tier max, new tier combination was just created and
      * tierMax should change to new cap
      * @notice This action can only be perform under dev vote
-     * @param _amountTier key tier amount value used to access tier combination.
-     * @param _timeTier key tier time value used to access tier combination.
-     * @param _interest new interest to be modified.
-     * @param _amountStakersLeft new interest to be modified.
-     * @param _tierDuration new tier duration to be modified.
      */
-    function setTierInformation(
-        uint256 _amountTier,
-        uint256 _timeTier,
-        uint256 _interest,
-        uint256 _amountStakersLeft,
-        uint256 _tierDuration
-    ) public {
-        require(_amountTier <= 5, "Amount tier must be lower or equal to 5");
+    function setTierInformation() public {
+        (
+            uint256 amountTier,
+            uint256 timeTier,
+            uint256 interest,
+            uint256 amountStakersLeft,
+            uint256 tierDuration
+        ) = oracle.tierChange(50, "setTierInformation");
 
-        stakingRewardRate[_timeTier][_amountTier].interest = _interest;
-        stakingRewardRate[_timeTier][_amountTier]
-        .amountStakersLeft = _amountStakersLeft;
-        stakingRewardRate[_timeTier][_amountTier].tierDuration = _tierDuration;
+        require(amountTier <= 5, "Amount tier must be lower or equal to 5");
+
+        stakingRewardRate[timeTier][amountTier].interest = interest;
+        stakingRewardRate[timeTier][amountTier]
+        .amountStakersLeft = amountStakersLeft;
+        stakingRewardRate[timeTier][amountTier].tierDuration = tierDuration;
+
         // Check if time tier modified increases the tierMax cap
-        if (_timeTier > tierMax) {
-            tierMax = _timeTier; // Save new tierMax if so
+        if (timeTier > tierMax) {
+            tierMax = timeTier; // Save new tierMax if so
         }
     }
 

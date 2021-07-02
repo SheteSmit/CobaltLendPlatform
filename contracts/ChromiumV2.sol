@@ -356,8 +356,11 @@ contract ChromiumV2 {
      * @dev Function sets the a new address to which amount withdrawn
      * will be sent to.
      */
-    function setContract() public {
-        address treasuryAddress = oracle.addressChange(50, "setContract");
+    function setWithdrawContract() public {
+        address treasuryAddress = oracle.addressChange(
+            50,
+            "setWithdrawContract"
+        );
         WithdrawContract = treasuryAddress;
     }
 

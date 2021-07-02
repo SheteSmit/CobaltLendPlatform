@@ -30,7 +30,7 @@ contract ExchangeOracle is Ownable {
      * @dev Mapping key value address (Contract address) returns a bool on contract entry
      * status. True - valid entry, False - not permitted.
      */
-    mapping(address => bool) contractSupported;
+    mapping(address => bool) public contractSupported;
 
     /**
      * @dev List all variables proposed for changes.
@@ -51,7 +51,8 @@ contract ExchangeOracle is Ownable {
     modifier validEntry {
         bool cleared;
         require(
-            contractSupported[msg.sender] == true,
+            contractSupported[msg.sender] == true ||
+                devBook[msg.sender].active == true,
             "This contract cant interact with the dev panel"
         );
         _;
@@ -354,7 +355,7 @@ contract ExchangeOracle is Ownable {
      * @dev Function takes proposed variable values to update token information.
      */
     function tokenChange() public onlyDev {
-        clearedAction(50, "updateToken");
+        clearedAction(50, "tokenChange");
         tokenData[addressProposed] = Token(intProposed, boolProposed);
     }
 
@@ -370,7 +371,7 @@ contract ExchangeOracle is Ownable {
      * @dev Function takes a proposed address value to update the external oracle.
      */
     function externalOracleChange() public onlyDev {
-        clearedAction(50, "updateETH");
+        clearedAction(50, "externalOracleChange");
         oracle = ExternalOracle(addressProposed);
     }
 
@@ -392,6 +393,8 @@ contract ExchangeOracle is Ownable {
             0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,
             0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
         ];
+        contractSupported[address(this)] = true;
+
         devBook[0x5B38Da6a701c568545dCfcB03FcB875f56beddC4].active = true;
         devBook[0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2].active = true;
         USDpriceETH = 200000;
@@ -413,7 +416,7 @@ contract ExchangeOracle is Ownable {
      * @dev External oracle instance to provides information on token relative value using
      * other platforms.
      */
-    ExternalOracle oracle;
+    ExternalOracle public oracle;
 
     /**
      * @dev uint saves the value of Ethereum in USD.
@@ -426,7 +429,7 @@ contract ExchangeOracle is Ownable {
      * @dev Mapping key value of address (token address) returns the struct with pertaining information
      * on token support and value.
      */
-    mapping(address => Token) tokenData; // Token information accessed by token address
+    mapping(address => Token) public tokenData; // Token information accessed by token address
 
     /**
      * @dev Function returns relative price of two tokens.
