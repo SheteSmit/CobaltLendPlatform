@@ -97,11 +97,12 @@ contract NFTLoan {
     /**
      * @dev Getter function that determines the owner of a NFTid
      * @param _tokenId The NFTid you want to check
-     * @return Returns an address
+     * @return _owner Returns an address
      */
     function ownerOf(uint256 _tokenId) external view returns (address _owner) {
         _owner = ownerId[_tokenId];
         require(_owner != address(0));
+        return ownerId[_tokenId];
     }
 
     /**
@@ -166,7 +167,7 @@ contract NFTLoan {
      * @param _riskFactor The riskFactor of the receiver
      * @param _interestRate The interestRate the receiver is charged
      * @param _userMaxTier The max tier of the receiver
-     * @param _flatFee The fee applied when receiving an NFT
+     * @param _flatfee The fee applied when receiving an NFT
      */
     function mintBorrower(
         address _to,
@@ -197,7 +198,7 @@ contract NFTLoan {
      * @param _riskFactor The riskFactor of the receiver
      * @param _interestRate The interestRate the receiver is charged
      * @param _userMaxTier The max tier of the receiver
-     * @param _flatFee The fee applied when receiving an NFT
+     * @param _flatfee The fee applied when receiving an NFT
      */
     function updateBorrower(
         address _to,

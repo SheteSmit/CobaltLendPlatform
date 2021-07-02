@@ -86,7 +86,7 @@ contract ExchangeOracle is Ownable {
     function clearedAction(
         uint256 _percentage,
         string memory _callingFunctionChange
-    ) public {
+    ) internal {
         uint256 votes;
         uint256 totalVotes;
         uint256 votePercentage;
@@ -363,7 +363,7 @@ contract ExchangeOracle is Ownable {
      * @dev Function takes a proposed uint value to update ethereum current price in USD.
      */
     function priceChangeETH() public onlyDev {
-        clearedAction(50, "updateETH");
+        clearedAction(50, "priceChangeETH");
         USDpriceETH = intProposed;
     }
 
