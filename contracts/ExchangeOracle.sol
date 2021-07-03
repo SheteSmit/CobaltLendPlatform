@@ -5,7 +5,7 @@ import "./interfaces/Ownable.sol";
 import "./interfaces/SafeMath.sol";
 import "./ExternalOracle.sol";
 
-contract ExchangeOracle is Ownable {
+contract ExchangeOracle {
     // **************************************** DEV VOTE ***************************************
     /**
      * @dev Struct saves information on dev's current vote and status. False denotes that dev
@@ -355,15 +355,15 @@ contract ExchangeOracle is Ownable {
      * @dev Function takes proposed variable values to update token information.
      */
     function tokenChange() public onlyDev {
-        clearedAction(50, "tokenChange");
+        clearedAction(51, "tokenChange");
         tokenData[addressProposed] = Token(intProposed, boolProposed);
     }
 
     /**
-     * @dev Function takes a proposed uint value to update ethereum current price in USD.
+     * @dev Function takes a proposed uint value to update ether current price in USD.
      */
     function priceChangeETH() public onlyDev {
-        clearedAction(50, "priceChangeETH");
+        clearedAction(51, "priceChangeETH");
         USDpriceETH = intProposed;
     }
 
@@ -371,39 +371,32 @@ contract ExchangeOracle is Ownable {
      * @dev Function takes a proposed address value to update the external oracle.
      */
     function externalOracleChange() public onlyDev {
-        clearedAction(50, "externalOracleChange");
+        clearedAction(51, "externalOracleChange");
         oracle = ExternalOracle(addressProposed);
     }
 
     constructor() {
-        tokenData[0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE] = Token(
+        tokenData[0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2] = Token(
             1000000000000000000,
             true
         );
         // rinkeby weth address to work with uniswap
-        tokenData[0xc778417E063141139Fce010982780140Aa0cD5Ab] = Token(
-            53000000000000,
+        tokenData[0x29a99c126596c0Dc96b02A88a9EAab44EcCf511e] = Token(
+            45000000000000,
             true
         );
-        tokenData[0x433C6E3D2def6E1fb414cf9448724EFB0399b698] = Token(
-            53000000000000,
-            true
-        );
-        devArray = [
-            0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,
-            0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
-        ];
-        contractSupported[address(this)] = true;
 
-        devBook[0x5B38Da6a701c568545dCfcB03FcB875f56beddC4].active = true;
-        devBook[0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2].active = true;
-        USDpriceETH = 200000;
+        devArray = [0x7fB9B032CDd38D3945B03aa0d62AB471E4b2E890];
+
+        devBook[0x7fB9B032CDd38D3945B03aa0d62AB471E4b2E890].active = true;
+        USDpriceETH = 222115;
+        supportETHtoUSD = true;
     }
 
     // ******************************** Token Data **********************************
     /**
      * @dev Struct saves information token data. Value field contains data on token
-     * value relative to ethereum. Active field displays current support for token.
+     * value relative to ether. Active field displays current support for token.
      * @notice Unsupported tokens use an external oracle to output relative value of eth
      * from other sources.
      */
@@ -419,17 +412,31 @@ contract ExchangeOracle is Ownable {
     ExternalOracle public oracle;
 
     /**
-     * @dev uint saves the value of Ethereum in USD.
+     * @dev uint saves the value of Ether in USD.
      * @notice Decimals were shifted to the right for more accurate readings on current
-     * prices of Ethereum in USD.
+     * prices of Ether in USD.
      */
     uint256 public USDpriceETH;
+
+    /**
+     * @dev bool saves status on where price of ether will be called from.
+     */
+    bool supportETHtoUSD;
 
     /**
      * @dev Mapping key value of address (token address) returns the struct with pertaining information
      * on token support and value.
      */
     mapping(address => Token) public tokenData; // Token information accessed by token address
+
+    /**
+     * @dev Function determines from which source the price of ether to USD will be pulled from.
+     * True - local / False - External oracle
+     */
+    function changeSupportStatus() public onlyDev {
+        clearedAction(51, "changeSupportStatus");
+        supportETHtoUSD = boolProposed;
+    }
 
     /**
      * @dev Function returns relative price of two tokens.
@@ -465,11 +472,15 @@ contract ExchangeOracle is Ownable {
     }
 
     /**
-     * @dev Function returns the price of Ethereum in USD
+     * @dev Function returns the price of Ether in USD
      * @return price of ETH in USD
      */
     function priceOfETH() public view returns (uint256) {
-        return (USDpriceETH);
+        if (supportETHtoUSD) {
+            return (USDpriceETH);
+        } else {
+            return oracle.getPriceETH();
+        }
     }
 
     /**

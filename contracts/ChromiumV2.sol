@@ -40,12 +40,19 @@ contract ChromiumV2 {
     bool public buyStatus;
 
     /**
+     * @dev Modifier restricts access to only devs.
+     */
+    modifier isDev() {
+        require(oracle.isDev(msg.sender) == true, "User is not a developer");
+        _;
+    }
+
+    /**
      * @dev Setter function changes the address of the default token
      * exchange uses to swap.
      */
-    function setToken() public {
-        // only devs
-        address newToken = oracle.addressChange(50, "setToken");
+    function setToken() public isDev {
+        address newToken = oracle.addressChange(51, "setToken");
         token = IERC20(newToken);
     }
 
@@ -60,9 +67,8 @@ contract ChromiumV2 {
      * @dev Setter function changes the address of the default oracle
      * from which contract pulls prices.
      */
-    function setOracle() public {
-        // only devs
-        address newOracle = oracle.addressChange(50, "setOracle");
+    function setOracle() public isDev {
+        address newOracle = oracle.addressChange(51, "setOracle");
         oracle = ExchangeOracle(newOracle);
     }
 
@@ -70,28 +76,30 @@ contract ChromiumV2 {
      * @dev Function returns the current status for chromium status. True - on,
      * False - off.
      */
-    function setChromiumStatus() public {
-        // only devs
-        bool status = oracle.boolChange(50, "setChromiumStatus");
+    function setChromiumStatus() public isDev {
+        bool status = oracle.boolChange(51, "setChromiumStatus");
         chromiumStatus = status;
     }
 
     /**
      * @dev Function changes chromium status.
      */
-    function setBuyStatus() public {
-        // only devs
-        bool status = oracle.boolChange(50, "setBuyStatus");
+    function setBuyStatus() public isDev {
+        bool status = oracle.boolChange(51, "setBuyStatus");
         buyStatus = status;
     }
 
+    function getEtherBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
     constructor(address _oracleAddress) {
-        token = IERC20(address(0x433C6E3D2def6E1fb414cf9448724EFB0399b698));
+        token = IERC20(address(0x29a99c126596c0Dc96b02A88a9EAab44EcCf511e));
         oracle = ExchangeOracle(_oracleAddress);
         chromiumStatus = true;
-        buyStatus = true;
+        buyStatus = false;
         feeThreshold = 5e18;
-        poolThreshold = 10000;
+        poolThreshold = 200000000000000000000000;
         flatFee = 3;
         percentFee = 3;
     }
@@ -140,9 +148,8 @@ contract ChromiumV2 {
      * @dev Function sets the threshold to determine fee and pool access.
      */
     function setThreshold() public {
-        // only devs
-        uint256 newLimit = oracle.numberChange(50, "setThreshold");
-        poolThreshold = newLimit;
+        uint256 newLimit = oracle.numberChange(51, "setThreshold");
+        poolThreshold = SafeMath.mul(newLimit, 1e18);
     }
 
     /**
@@ -151,11 +158,8 @@ contract ChromiumV2 {
      * the amount sent.
      * @param _poolType Type 1 funds high pool, type 2 funds low pool.
      * @param _amount Amount being sent to the contract.
-     * @notice Permission for contract to withdraw from funder's wallet
-     * should be granted beforehand.
      */
     function fundTokenPool(uint256 _poolType, uint256 _amount) public {
-        // only devs
         if (_poolType == 1) {
             IERC20(token).universalTransferFromSenderToThis(_amount);
             highTokenPool = SafeMath.add(highTokenPool, _amount);
@@ -198,7 +202,7 @@ contract ChromiumV2 {
     /**
      * @dev Function outputs information on a simulated transaction based on
      * an amount of ETH sent.
-     * @param _amount of ethereum sent to buy CBLT tokens
+     * @param _amount of ether sent to buy CBLT tokens
      * @return amount of expected tokens user should receive on ETH sent,
      * new balance after fee has been subtracted, and the substracted fee.
      */
@@ -286,13 +290,13 @@ contract ChromiumV2 {
         if (tokensOwed >= poolThreshold) {
             require(
                 tokensOwed < highTokenPool,
-                "Pool is currently depleted for this amount promised."
+                "Pool is currently depleted for the amount promised."
             );
             highTokenPool = SafeMath.sub(highTokenPool, tokensOwed);
         } else {
             require(
                 tokensOwed < lowTokenPool,
-                "Pool is currently depleted for this amount promised."
+                "Pool is currently depleted for the amount promised."
             );
             lowTokenPool = SafeMath.sub(lowTokenPool, tokensOwed);
         }
@@ -307,7 +311,7 @@ contract ChromiumV2 {
      * sends the amount of ETH equivalent in value back.
      * @notice Amount of ETH sent is first subtracted a fee.
      */
-    function sellCBLT(uint256 _amount) public payable {
+    function sellCBLT(uint256 _amount) public payable validSell {
         uint256 newBalance;
         uint256 fee;
 
@@ -316,7 +320,9 @@ contract ChromiumV2 {
             newBalance < contractBalance,
             "Expected ETH return is higher than contract's balance."
         );
+
         totalFeeBalance = SafeMath.add(totalFeeBalance, fee);
+        contractBalance = SafeMath.sub(contractBalance, newBalance);
 
         IERC20(token).universalTransferFromSenderToThis(
             SafeMath.mul(_amount, 1e18)
@@ -358,7 +364,7 @@ contract ChromiumV2 {
      */
     function setWithdrawContract() public {
         address treasuryAddress = oracle.addressChange(
-            50,
+            51,
             "setWithdrawContract"
         );
         WithdrawContract = treasuryAddress;
@@ -368,7 +374,7 @@ contract ChromiumV2 {
      * @dev Getter function used to pull the total running balance of
      * fees collected in ETH.
      */
-    function getTotalBalance() public view returns (uint256) {
+    function getTotalFeeBalance() public view returns (uint256) {
         return totalFeeBalance;
     }
 
@@ -376,7 +382,7 @@ contract ChromiumV2 {
      * @dev transfers funds to the approved address for withdrawal.
      */
     function withdrawFees() public payable {
-        uint256 amount = oracle.numberChange(50, "newFlatFee");
+        uint256 amount = oracle.numberChange(51, "withdrawFees");
 
         require(
             amount <= totalFeeBalance,
@@ -388,19 +394,28 @@ contract ChromiumV2 {
     }
 
     /**
-     * @dev Setter for staking flat fee.
+     * @dev Setter for flat fee.
      */
-    function newFlatFee() public {
-        uint256 newFee = oracle.numberChange(50, "newFlatFee");
+    function newFlatFee() public isDev {
+        uint256 newFee = oracle.numberChange(51, "newFlatFee");
         flatFee = newFee;
     }
 
     /**
-     * @dev Setter for staking percentage fee.
+     * @dev Setter for percentage fee.
      */
-    function newPercentFee() public {
-        uint256 newFee = oracle.numberChange(50, "newPercentFee");
+    function newPercentFee() public isDev {
+        uint256 newFee = oracle.numberChange(51, "newPercentFee");
         percentFee = newFee;
+    }
+
+    /**
+     * @dev Setter for new fee threshold.
+     */
+
+    function newThreshold() public isDev {
+        uint256 newThreshold = oracle.numberChange(51, "newThreshold");
+        feeThreshold = newThreshold;
     }
 
     //*********************************** Exchange Migration *************************************
@@ -413,24 +428,19 @@ contract ChromiumV2 {
     /**
      * @dev Function sets a new address to which all assets will migrate.
      */
-    function setExchangeAddress() public {
-        // Only devs
-        address newExchange = oracle.addressChange(50, "setExchangeAddress");
+    function setMigrationAddress() public isDev {
+        address newExchange = oracle.addressChange(51, "setMigrationAddress");
         migrationExchange = newExchange;
     }
 
     /**
-     * @dev
+     * @dev Function migrates both CBLT and ETH to the next version of Chromium.
      */
-    function assetsMigration() public payable {
-        bool confirmation = oracle.boolChange(50, "assetsMigration");
-
-        require(confirmation == true, "This action is not approved");
-
+    function assetsMigration() public payable isDev {
+        uint256 amount = oracle.numberChange(51, "assetsMigration");
         uint256 totalTokenBalance = token.balanceOf(address(this));
-        uint256 totalETHBalance = address(this).balance;
 
         IERC20(token).universalTransfer(migrationExchange, totalTokenBalance);
-        payable(migrationExchange).transfer(totalETHBalance);
+        payable(migrationExchange).transfer(amount);
     }
 }

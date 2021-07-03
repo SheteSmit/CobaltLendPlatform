@@ -9,5 +9,11 @@ contract ExternalOracle {
         public
         view
         returns (uint256)
-    {}
+    {
+        return 1;
+    }
+
+    function getPriceETH() public view returns (uint256) {
+        return 1;
+    }
 }

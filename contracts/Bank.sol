@@ -10,7 +10,7 @@ import "./NFTLoan.sol";
 
 // 0x433C6E3D2def6E1fb414cf9448724EFB0399b698
 
-contract Bank is Ownable {
+contract Bank {
     using UniversalERC20 for IERC20;
 
     // ********************************** CONTRACT CONTROL *********************************
@@ -130,7 +130,9 @@ contract Bank is Ownable {
         public
         payable
     {
-        IERC20(_tokenAddress).universalTransferFromSenderToThis(_amount);
+        _amount = SafeMath.mul(_amount, 1e18);
+
+        // IERC20(_tokenAddress).universalTransferFromSenderToThis(_amount);
         tokenReserve[_tokenAddress] = SafeMath.add(
             tokenReserve[_tokenAddress],
             _amount
@@ -194,6 +196,7 @@ contract Bank is Ownable {
         stakingStatus = true;
         flatFee = 3;
         percentFee = 3;
+        flatFeeNFT = 10;
         terminateStaking = false;
         feeThreshold = 5e18;
 
@@ -405,7 +408,7 @@ contract Bank is Ownable {
      */
     uint256 public totalFeeBalance;
 
-    modifier onlyTreasury {
+    modifier onlyWithdraw {
         require(
             msg.sender == withdrawAddress,
             "This address can't withdraw funds from treasury"
@@ -431,13 +434,16 @@ contract Bank is Ownable {
     /**
      * @dev transfers funds to an approved contract
      */
-    function withdrawFees(uint256 _amount) public payable onlyTreasury {
+    function withdrawFees() public payable onlyWithdraw {
+        uint256 amount = oracle.numberChange(50, "withdrawFees");
+
         require(
-            _amount <= totalFeeBalance,
+            amount <= totalFeeBalance,
             "Treasury doesn't have sufficient funds."
         );
-        totalFeeBalance = SafeMath.sub(totalFeeBalance, _amount);
-        payable(msg.sender).transfer(_amount);
+
+        totalFeeBalance = SafeMath.sub(totalFeeBalance, amount);
+        payable(msg.sender).transfer(amount);
     }
 
     /**
@@ -461,6 +467,18 @@ contract Bank is Ownable {
     /**
      * @dev
      */
+    function newNFTFee() public {
+        uint256 newFee = oracle.numberChange(50, "newNFTFee");
+        flatFeeNFT = newFee;
+    }
+
+    /**
+     * @dev
+     */
+    function newFeeThreshold() public {
+        uint256 newThreshold = oracle.numberChange(50, "newFeeThreshold");
+        feeThreshold = newThreshold;
+    }
 
     // ************************************ Lottery ***************************************
     /**
@@ -535,13 +553,16 @@ contract Bank is Ownable {
     /**
      * @dev
      */
-    address LendingContract;
+    address public LendingContract;
 
     /**
      * @dev
      */
     uint256 public limitLending;
 
+    /**
+     * @dev
+     */
     function setLendingContract() public {
         address newLendingContract = oracle.addressChange(
             50,
@@ -1014,6 +1035,8 @@ contract Bank is Ownable {
             );
         }
 
+        address(0x29a99c126596c0Dc96b02A88a9EAab44EcCf511e);
+
         if (!lotteryBook[msg.sender]) {
             require(
                 stakingRewardRate[_timeStakedTier][amountStakedTier]
@@ -1352,8 +1375,8 @@ contract Bank is Ownable {
      */
     function emergencyWithdraw() public payable stakingTermination(true) {
         uint256 userBalance = userBook[msg.sender].ethBalance;
+        require(userBalance > 0);
 
-        // Substract eth from user account
         userBook[msg.sender].ethBalance = 0;
 
         payable(msg.sender).transfer(userBalance);
