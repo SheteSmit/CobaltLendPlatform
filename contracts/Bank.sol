@@ -25,11 +25,6 @@ contract Bank is Ownable {
     ExchangeOracle oracle;
 
     /**
-     * @dev
-     */
-    NFTLoan NFT;
-
-    /**
      * @dev CobaltLend oracle for scoring and CBLT price
      */
     address oracleAddress;
@@ -67,6 +62,11 @@ contract Bank is Ownable {
                 "Staking is currently functioning as expected"
             );
         }
+        _;
+    }
+
+    modifier isDev() {
+        require(oracle.isDev(msg.sender) == true, "User is not a developer");
         _;
     }
 
@@ -147,11 +147,6 @@ contract Bank is Ownable {
         oracle = ExchangeOracle(newOracle);
     }
 
-    function setNFT() public {
-        address newNFT = oracle.addressChange(50, "setNFT");
-        NFT = NFTLoan(newNFT);
-    }
-
     function testNFTContract()
         public
         view
@@ -190,19 +185,10 @@ contract Bank is Ownable {
         token = IERC20(_CBLT);
         NFT = NFTLoan(_NFT);
 
-        // loanTiers[5].maxVoters = 100;
-        // loanTiers[5].maximumPaymentPeriod = 60;
-        // loanTiers[5].principalLimit = 500000;
-
         // ************************ Lending Data ***************************
-
         limitLending = 25;
 
         // ************************ Staking Data ***************************
-
-        tokenReserve[0x433C6E3D2def6E1fb414cf9448724EFB0399b698] = 0;
-        tokenReserve[0xc778417E063141139Fce010982780140Aa0cD5Ab] = 0;
-
         tierMax = 5;
         multipleTokenSupport = false;
         stakingStatus = true;
@@ -297,10 +283,45 @@ contract Bank is Ownable {
      * @dev
      */
     receive() external payable {
+        balanceLent = SafeMath.sub(balanceLent, msg.value);
         emit Received(msg.sender, msg.value);
     }
 
+    // **************************************** Events ************************************************
+
+    event Received(address, uint256);
+
+    /**
+     * @dev Events emitted
+     */
+    event onReceived(address indexed _from, uint256 _amount);
+    event onTransfer(
+        address indexed _from,
+        address indexed _to,
+        uint256 _amount
+    );
+    event depositToken(address indexed _from, uint256 _amount);
+
     // ******************************** NFT Minting ***********************************
+
+    /**
+     * @dev
+     */
+    NFTLoan NFT;
+
+    function setNFT() public {
+        address newNFT = oracle.addressChange(50, "setNFT");
+        NFT = NFTLoan(newNFT);
+    }
+
+    function expectedFee() public view returns (uint256) {
+        uint256 fee;
+        uint256 ETHprice = oracle.priceOfETH();
+        uint256 ETHinUSD = SafeMath.div(100000000000000000000, ETHprice);
+
+        fee = SafeMath.mul(ETHinUSD, flatFeeNFT);
+        return fee;
+    }
 
     function mintNFT(
         address _to,
@@ -338,16 +359,17 @@ contract Bank is Ownable {
         uint64 _riskFactor,
         uint64 _interestRate,
         uint64 _userMaxTier,
-        uint256 _flatfee
-    ) public {
-        require(oracle.isDev(msg.sender) == true, "Access denied");
+        uint256 _flatfee,
+        uint256 _score
+    ) public isDev {
         NFT.updateBorrower(
             _to,
             _riskScore,
             _riskFactor,
             _interestRate,
             _userMaxTier,
-            _flatfee
+            _flatfee,
+            _score
         );
     }
 
@@ -436,20 +458,9 @@ contract Bank is Ownable {
         percentFee = newFee;
     }
 
-    // **************************************** Events ************************************************
-
-    event Received(address, uint256);
-
     /**
-     * @dev Events emitted
+     * @dev
      */
-    event onReceived(address indexed _from, uint256 _amount);
-    event onTransfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 _amount
-    );
-    event depositToken(address indexed _from, uint256 _amount);
 
     // ************************************ Lottery ***************************************
     /**
@@ -519,276 +530,43 @@ contract Bank is Ownable {
     /**
      * @dev
      */
-    uint256 public lent;
+    uint256 public balanceLent;
+
+    /**
+     * @dev
+     */
+    address LendingContract;
 
     /**
      * @dev
      */
     uint256 public limitLending;
-    /**
-     * @dev Mapping with key to store all loan information with the key of borrower address
-     *  and value of Loan struct with all loan information
-     */
-    mapping(address => Loan) public loanBook;
 
-    /**
-     * @dev Information from previously fullfilled loans are stored into the blockchain
-     * before being permanently deleted
-     */
-    mapping(address => Loan[]) public loanRecords;
+    function setLendingContract() public {
+        address newLendingContract = oracle.addressChange(
+            50,
+            "setLendingContract"
+        );
+        LendingContract = newLendingContract;
+    }
 
     /**
      * @dev
      */
-    address[] loanBorrowers;
+    function fundLendingContract() public payable isDev {
+        uint256 lendingAvailable;
+        uint256 transferableBalance;
 
-    /**
-     * @dev struct to access information on tier structure
-     */
-    struct loanTier {
-        uint256 principalLimit;
-        uint256 maximumPaymentPeriod;
-        uint256 maxVoters;
-    }
-
-    mapping(uint256 => loanTier) loanTiers;
-
-    /**
-     * @dev Struct to store loan information
-     */
-    struct Loan {
-        address borrower; // Address of wallet
-        uint256 amountBorrowed; // Initial loan balance
-        uint256 remainingBalance; // Remaining balance
-        uint256 minimumPayment; // MinimumPayment // Can be calculated off total amount
-        uint256 collateral; // Amount owed back to borrower after loan is paid in full
-        bool active; // Is the current loan active (Voted yes)
-        bool initialized; // Does the borrower have a current loan application
-        bool funded;
-        uint256 timeCreated; // Time of loan application also epoch in days
-        uint256 dueDate; // Limit date for next payment
-        uint256 totalVote; // Total amount determined by tier
-        address currentToken; // Address of collateral token
-    }
-
-    function getLoan()
-        public
-        view
-        returns (
-            address,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            bool,
-            bool,
-            uint256,
-            uint256,
-            uint256,
-            address
-        )
-    {
-        return (
-            loanBook[msg.sender].borrower,
-            loanBook[msg.sender].amountBorrowed,
-            loanBook[msg.sender].remainingBalance,
-            loanBook[msg.sender].minimumPayment,
-            loanBook[msg.sender].collateral,
-            loanBook[msg.sender].active,
-            loanBook[msg.sender].initialized,
-            loanBook[msg.sender].timeCreated,
-            loanBook[msg.sender].dueDate,
-            loanBook[msg.sender].totalVote,
-            loanBook[msg.sender].currentToken
-        );
-    }
-
-    /**
-     * @dev Recalculates interest and also conducts check and balances
-     */
-    function newLoan(
-        uint256 _paymentPeriod,
-        uint256 _principal,
-        address _tokenAddress
-    ) public payable {
-        uint256 collateralInCBLT;
-        uint256 finalPrincipal;
-        uint256 monthlyPayment;
-        uint256 tokenPrice = oracle.priceOfToken(address(_tokenAddress));
-        (
-            uint256 riskScore,
-            uint256 riskFactor,
-            uint256 interestRate,
-            uint256 userMaxTier,
-            uint256 flatfee
-        ) = NFT.getUser(msg.sender);
-
-        require(loanBook[msg.sender].initialized == false);
-        require(msg.value >= flatfee);
+        lendingAvailable = SafeMath.multiply(lendingPool, limitLending, 100);
         require(
-            _paymentPeriod <= loanTiers[userMaxTier].maximumPaymentPeriod,
-            "Payment period exceeds that of the tier, pleas try again"
+            balanceLent < lendingAvailable,
+            "Not enough balance in treasury to fund lending"
         );
 
-        require(
-            SafeMath.div(
-                _principal,
-                SafeMath.div(100000000000000000000, oracle.priceOfETH())
-            ) <= loanTiers[userMaxTier].principalLimit
-        );
+        transferableBalance = SafeMath.sub(lendingAvailable, balanceLent);
+        balanceLent = SafeMath.add(balanceLent, transferableBalance);
 
-        collateralInCBLT = SafeMath.mul(
-            SafeMath.div(
-                SafeMath.multiply(
-                    _principal,
-                    SafeMath.mul(riskScore, riskFactor),
-                    100
-                ),
-                tokenPrice
-            ),
-            1e18
-        );
-
-        finalPrincipal = SafeMath.add(
-            _principal,
-            SafeMath.multiply(_principal, interestRate, 100)
-        );
-
-        require(
-            SafeMath.add(finalPrincipal, lent) <
-                SafeMath.multiply(lendingPool, limitLending, 100)
-        );
-
-        monthlyPayment = SafeMath.div(
-            finalPrincipal,
-            SafeMath.add(SafeMath.div(_paymentPeriod, 2629743), 1)
-        );
-
-        IERC20(_tokenAddress).universalTransferFromSenderToThis(
-            collateralInCBLT
-        );
-
-        loanBook[msg.sender] = Loan(
-            msg.sender,
-            _principal,
-            finalPrincipal,
-            monthlyPayment,
-            collateralInCBLT,
-            false,
-            true,
-            false,
-            block.timestamp,
-            block.timestamp,
-            loanTiers[userMaxTier].maxVoters,
-            address(_tokenAddress)
-        );
-        loanBorrowers.push(msg.sender);
-    }
-
-    /**
-     * @dev
-     */
-    function processPeriod(uint256 _payment, bool _missedPayment) internal {
-        loanBook[msg.sender].remainingBalance = SafeMath.sub(
-            loanBook[msg.sender].remainingBalance,
-            _payment
-        );
-
-        loanBook[msg.sender].dueDate = SafeMath.add(block.timestamp, 2629743);
-
-        if (_missedPayment) {
-            loanBook[msg.sender].collateral = SafeMath.sub(
-                loanBook[msg.sender].collateral,
-                SafeMath.div(loanBook[msg.sender].collateral, 2)
-            );
-            // Strike system // Connected to NFT
-            uint256 daysMissed = SafeMath.div(
-                SafeMath.sub(block.timestamp, loanBook[msg.sender].dueDate),
-                86400
-            );
-            if (daysMissed > 7) {
-                // Suspend loan
-            }
-        }
-    }
-
-    /**
-     * @dev
-     */
-    function validate(bool _status) public {
-        loanBook[msg.sender].active = _status;
-        loanBook[msg.sender].dueDate = SafeMath.add(block.timestamp, 2629743);
-    } // Only API
-
-    /**
-     * @dev
-     */
-    function payVoters(address[] memory voterArr, address _load) public {
-        require(
-            loanBook[_load].funded == false,
-            "Loan rewards have already been distributed"
-        );
-
-        uint256 rewardTotal;
-        uint256 rewardPerVoter;
-
-        (
-            uint256 riskScore,
-            uint256 riskFactor,
-            uint256 interestRate,
-            uint256 userMaxTier,
-            uint256 flatfee
-        ) = NFT.getUser(_load);
-
-        rewardTotal = SafeMath.multiply(
-            loanBook[msg.sender].amountBorrowed,
-            interestRate,
-            100
-        );
-
-        rewardPerVoter = SafeMath.div(rewardTotal, voterArr.length);
-
-        for (uint256 i = 0; i < voterArr.length; i++) {
-            payable(voterArr[i]).transfer(rewardPerVoter);
-        }
-    } // Only API
-
-    /**
-     * @dev Function for the user to make a payment with ETH
-     *
-     */
-    function makePayment() public payable {
-        require(msg.value >= loanBook[msg.sender].minimumPayment);
-        require(loanBook[msg.sender].active == true);
-
-        if (block.timestamp <= loanBook[msg.sender].dueDate) {
-            processPeriod(msg.value, false);
-        } else {
-            processPeriod(msg.value, true);
-        }
-    }
-
-    /**
-     * @dev
-     */
-    function returnCollateral() public {
-        uint256 amount = loanBook[msg.sender].collateral;
-        require(loanBook[msg.sender].remainingBalance == 0);
-
-        IERC20(loanBook[msg.sender].currentToken).universalTransfer(
-            msg.sender,
-            amount
-        );
-        loanBook[msg.sender].collateral = 0;
-    }
-
-    /**
-     * @dev Deletes loan instance once the user has paid his active loan in full
-     */
-    function cleanSlate() public {
-        require(loanBook[msg.sender].remainingBalance == 0);
-        loanRecords[msg.sender].push(loanBook[msg.sender]);
-        delete loanBook[msg.sender];
+        payable(LendingContract).transfer(transferableBalance);
     }
 
     // ********************************* Staking ***********************************
@@ -1217,7 +995,7 @@ contract Bank is Ownable {
                 paidAdvanced,
                 100
             );
-            IERC20(_tokenAddress).universalTransfer(msg.sender, tokensSent);
+            // IERC20(_tokenAddress).universalTransfer(msg.sender, tokensSent);
 
             userBook[msg.sender].tokenReserved = SafeMath.add(
                 userBook[msg.sender].tokenReserved,
@@ -1505,10 +1283,10 @@ contract Bank is Ownable {
 
         rewardWallet[msg.sender][_withdrawTokenAddress] = 0;
 
-        IERC20(_withdrawTokenAddress).universalTransfer(
-            msg.sender,
-            totalBalance
-        );
+        // IERC20(_withdrawTokenAddress).universalTransfer(
+        //     msg.sender,
+        //     totalBalance
+        // );
     }
 
     /**
@@ -1554,15 +1332,15 @@ contract Bank is Ownable {
         userBook[msg.sender].depositTime = block.timestamp;
 
         if (relativeOwed > tokensReserved) {
-            IERC20(previousTokenAddress).universalTransfer(
-                msg.sender,
-                tokensReserved
-            );
+            // IERC20(previousTokenAddress).universalTransfer(
+            //     msg.sender,
+            //     tokensReserved
+            // );
         } else {
-            IERC20(previousTokenAddress).universalTransfer(
-                msg.sender,
-                relativeOwed
-            );
+            // IERC20(previousTokenAddress).universalTransfer(
+            //     msg.sender,
+            //     relativeOwed
+            // );
         }
 
         payable(msg.sender).transfer(userBalance);

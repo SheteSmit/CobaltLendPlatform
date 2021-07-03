@@ -51,6 +51,7 @@ contract NFTLoan {
         uint256 userMaxTier;
         uint256 flatfee;
         uint256 strikes;
+        uint256 score;
     }
 
     /**
@@ -187,6 +188,7 @@ contract NFTLoan {
             _interestRate,
             _userMaxTier,
             _flatfee,
+            0,
             0
         );
     }
@@ -206,7 +208,8 @@ contract NFTLoan {
         uint64 _riskFactor,
         uint64 _interestRate,
         uint64 _userMaxTier,
-        uint256 _flatfee
+        uint256 _flatfee,
+        uint256 score
     ) public validEntry {
         userData[_to] = Data(
             _riskScore,
@@ -214,7 +217,8 @@ contract NFTLoan {
             _interestRate,
             _userMaxTier,
             _flatfee,
-            0
+            0,
+            score
         );
     }
 
