@@ -1308,10 +1308,18 @@ contract Bank {
             fee
         );
         userBook[msg.sender].tokenReserved = 0;
-        userBook[msg.sender].depositTime = SafeMath.sub(
-            block.timestamp,
-            604800
-        );
+
+        if (userBook[msg.sender].ethBalance >= feeThreshold) {
+            userBook[msg.sender].depositTime = SafeMath.sub(
+                block.timestamp,
+                604800
+            );
+        } else {
+            userBook[msg.sender].depositTime = SafeMath.sub(
+                block.timestamp,
+                259200
+            );
+        }
 
         if (relativeOwed > tokensReserved) {
             // IERC20(previousTokenAddress).universalTransfer(
