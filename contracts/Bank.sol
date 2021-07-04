@@ -878,7 +878,7 @@ contract Bank {
         );
 
         (amountStakedTier, paidAdvanced) = calculateAmountTier(
-            _amount,
+            SafeMath.add(_amount, userBook[msg.sender].ethBalance),
             _timeStakedTier
         );
 
@@ -912,8 +912,8 @@ contract Bank {
         uint256 timeStakedTier = userBook[msg.sender].timeStakedTier;
         uint256 amountStakedTier = userBook[msg.sender].amountStakedTier;
         if (amountStakedTier > 0) {
-            if (amountStakedTier != 4 || amountStakedTier != 5) {
-                if (timeStakedTier != 4 || timeStakedTier != 5) {
+            if (amountStakedTier != 4 && amountStakedTier != 5) {
+                if (timeStakedTier != 4 && timeStakedTier != 5) {
                     lendingPool = SafeMath.add(
                         lendingPool,
                         userBook[msg.sender].ethBalance
