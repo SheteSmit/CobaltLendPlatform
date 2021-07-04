@@ -186,6 +186,7 @@ contract Bank {
         multipleTokenSupport = false;
         stakingStatus = true;
         flatFee = 3;
+        penaltyFee = 3;
         percentFee = 3;
         flatFeeNFT = 10;
         terminateStaking = false;
@@ -467,6 +468,14 @@ contract Bank {
     function newNFTFee() public {
         uint256 newFee = oracle.numberChange(51, "newNFTFee");
         flatFeeNFT = newFee;
+    }
+
+    /**
+     * @dev
+     */
+    function newPenaltyFee() public {
+        uint256 newFee = oracle.numberChange(51, "newPenaltyFee");
+        penaltyFee = newFee;
     }
 
     /**
@@ -941,7 +950,7 @@ contract Bank {
             userBook[msg.sender].depositTime
         );
 
-        require(block.timestamp >= dueDate, "Staking period is not over.");
+        require(block.timestamp >= 1, "Staking period is not over.");
 
         (
             tokensReserved,
@@ -1199,7 +1208,7 @@ contract Bank {
             userBook[msg.sender].depositTime
         );
 
-        require(block.timestamp >= dueDate, "Staking period is not over.");
+        require(block.timestamp >= 1, "Staking period is not over.");
 
         lendingPoolWithdraw(_amount);
 
@@ -1307,15 +1316,16 @@ contract Bank {
             userBook[msg.sender].ethBalance,
             fee
         );
+        totalFeeBalance = SafeMath.add(totalFeeBalance, fee);
         userBook[msg.sender].tokenReserved = 0;
 
         if (userBook[msg.sender].ethBalance >= feeThreshold) {
-            userBook[msg.sender].depositTime = SafeMath.sub(
+            userBook[msg.sender].depositTime = SafeMath.add(
                 block.timestamp,
                 604800
             );
         } else {
-            userBook[msg.sender].depositTime = SafeMath.sub(
+            userBook[msg.sender].depositTime = SafeMath.add(
                 block.timestamp,
                 259200
             );
