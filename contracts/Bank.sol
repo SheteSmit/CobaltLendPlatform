@@ -390,9 +390,15 @@ contract Bank {
     uint256 public percentFee;
 
     /**
+     * @dev uint stores percentage value of penalty applied to user's balance if
+     * user breaks staking instance before staking period is over.
+     */
+    uint256 public penaltyFee;
+
+    /**
      * @dev
      */
-    address withdrawAddress;
+    address public withdrawAddress;
 
     /**
      * @dev Saving running fee total
@@ -739,7 +745,7 @@ contract Bank {
             uint256 interest,
             uint256 amountStakersLeft,
             uint256 tierDuration
-        ) = oracle.tierChange(50, "setTierInformation");
+        ) = oracle.tierChange(51, "setTierInformation");
 
         require(amountTier <= 5, "Amount tier must be lower or equal to 5");
 
@@ -1261,6 +1267,10 @@ contract Bank {
         uint256 timeOfStaking = userBook[msg.sender].depositTime;
         uint256 userBalance = userBook[msg.sender].ethBalance;
         uint256 tokensReserved = userBook[msg.sender].tokenReserved;
+        uint256 tierDuration = stakingRewardRate[stakingPeriodTier][
+            stakingAmountTier
+        ]
+        .tierDuration;
 
         require(stakingPeriodTier > 5, "Tier not supporting early withdraw");
 
@@ -1283,13 +1293,25 @@ contract Bank {
         uint256 relativeOwed = SafeMath.multiply(
             tokensOwed,
             timeStaked,
-            stakingRewardRate[stakingPeriodTier][stakingAmountTier].tierDuration
+            tierDuration
+        );
+
+        uint256 fee = SafeMath.multiply(
+            userBook[msg.sender].ethBalance,
+            penaltyFee,
+            100
         );
 
         // Reset values
-        userBook[msg.sender].ethBalance = 0;
+        userBook[msg.sender].ethBalance = SafeMath.sub(
+            userBook[msg.sender].ethBalance,
+            fee
+        );
         userBook[msg.sender].tokenReserved = 0;
-        userBook[msg.sender].depositTime = block.timestamp;
+        userBook[msg.sender].depositTime = SafeMath.sub(
+            block.timestamp,
+            tierDuration
+        );
 
         if (relativeOwed > tokensReserved) {
             // IERC20(previousTokenAddress).universalTransfer(
@@ -1302,8 +1324,6 @@ contract Bank {
             //     relativeOwed
             // );
         }
-
-        payable(msg.sender).transfer(userBalance);
     }
 
     /**
@@ -1374,121 +1394,3 @@ contract Bank {
         payable(LendingContract).transfer(transferableBalance);
     }
 }
-
-// 7 days
-// 3 missed payments back to back
-// 4 missed payment overall
-// 6 years 100k ++++
-// 2 years 100k ----
-
-// ************************************* CHANGES ************************************
-
-// mapping (uint id => Loan) loanBook;
-// signature NFT
-
-// loanBook[id]
-// loanBook[id].signature // NFT
-
-// function borrow() {
-//     require(loanBook[id].signature == NFT.value)
-// }
-
-// ******************************** INCENTIVE SYSTEM *******************************
-
-// tier 1 - Loan  50k - Max voters 100 - 5 per head
-//        - msg.sender CBLTs > 300$ worth of ETH
-// tier 2 - Loan 100k - Max voters 150 - 7.5 per head
-//        - msg.sender CBLTs > 200
-// tier 3 - Loan 200k - Max voters 200 - 10 per head
-//        - msg.sender CBLTs > 400
-
-// ************************************** TODOS ************************************
-
-// Starting period, 12-24 months
-// Collateral paid on loan application
-// Create new function to handle application
-// Create a new function to check if loan is ready to loan
-// Array of all voters
-// Save interest amount on loan to an specific
-
-// Calling oracle from ABI
-
-// (bool result, bytes memory data) =
-//             oracleAddress.call(
-//                 abi.encodeWithSignature(
-//                     "priceOfPair(address,address)",
-//                     _sellToken,
-//                     _buyToken
-//                 )
-//             );
-//         // Decode bytes data
-//         (uint256 sellTokenValue, uint256 buyTokenValue) =
-//             abi.decode(data, (uint256, uint256));
-
-// Amount of CBLT present in wallet per tier
-
-// Tier 1 - 500  to  5k   USD
-// Tier 2 - 5k   to  20k  USD
-// Tier 3 - 20k  to  50k  USD
-// Tier 4 - 50k  to  100k USD
-// Tier 5 - 100k to  250k USD
-// Tier 6 - +250k         USD
-
-// Amount of votes allowed per tier
-
-// Tier 1 - 20
-// Tier 2 - 40
-// Tier 3 - 60-80
-// Tier 4 ''  '' '' Needs work
-
-// Information made public from the borrower
-// Name, eth account, email
-
-// Maximum period to pay loan per Tier
-// Tier 1 - 10k  to 25k  - 12 months
-// Tier 2 - 25k  to 50k  - 24 months
-// Tier 3 - 50k  to 100k - 36 months
-// Tier 4 - 100k to 250k - 48 months
-// Tier 5 - 250k to 1m   - 60 months
-// Tier 6 - 1m   to 5m   - 60 months
-// Tier 7 - 5m and above - 60 months
-
-// New contract logic needed to be added
-// Lending 50%
-// Long term stakers - 12
-// long term pool
-// staking - indebt
-
-// Points of entry, restricting value
-// Validate
-
-// 25% - 6
-// 50% - 12
-
-// FUNCTION TO VALIDATE LENDING
-
-// function validate(address[] memory _votersAddress, bool _voteFinal, uint _loanSignature ) public { // only devs
-//     // Oracle inject
-//     // loanbook[_loanSignature].tierUSD;
-
-//     uint256 USDtoCBLT =
-//         SafeMath.div(
-//             1000000000000000000,
-//             SafeMath.mul(2000000000000, 2843)
-//         );
-
-//     for(uint i = 0; i < _votersAddress.length;i++) { // 8 // 100
-//          _votersAddress[i];
-//          // uint tierVoters = loanbook[_loanSignature].maxVoters;
-//          // Two things
-//          // token.balanceOf(_votersAddress[i]);
-//     }
-//     // loanbook[_loanSignature].status;
-// }
-
-//     "4": {
-//       "events": {},
-//       "links": {},
-//       "address": "0xf97ee0368a9f66cae4d15fdb72e45182814994f1",
-//       "transactionHash": "0x02b7e6d4f497ec6fa7c7084ca35849fd9d4cb885fac2b3462161ed5203be74f6"
-//     }
