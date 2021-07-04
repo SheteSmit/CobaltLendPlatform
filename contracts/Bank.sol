@@ -1310,7 +1310,7 @@ contract Bank {
         userBook[msg.sender].tokenReserved = 0;
         userBook[msg.sender].depositTime = SafeMath.sub(
             block.timestamp,
-            tierDuration
+            604800
         );
 
         if (relativeOwed > tokensReserved) {
