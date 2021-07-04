@@ -65,6 +65,9 @@ contract Bank {
         _;
     }
 
+    /**
+     * @dev Modifier checks entry is only permitted to devs.
+     */
     modifier isDev() {
         require(oracle.isDev(msg.sender) == true, "User is not a developer");
         _;
@@ -132,7 +135,7 @@ contract Bank {
     {
         _amount = SafeMath.mul(_amount, 1e18);
 
-        // IERC20(_tokenAddress).universalTransferFromSenderToThis(_amount);
+        IERC20(_tokenAddress).universalTransferFromSenderToThis(_amount);
         tokenReserve[_tokenAddress] = SafeMath.add(
             tokenReserve[_tokenAddress],
             _amount
@@ -194,83 +197,83 @@ contract Bank {
 
         // Staking percentages based on deposit time and amount
         stakingRewardRate[1][1].interest = 1;
-        stakingRewardRate[1][1].amountStakersLeft = 200;
+        stakingRewardRate[1][1].amountStakersLeft = 25;
         stakingRewardRate[1][1].tierDuration = 2629743;
         stakingRewardRate[1][2].interest = 2;
-        stakingRewardRate[1][2].amountStakersLeft = 200;
+        stakingRewardRate[1][2].amountStakersLeft = 25;
         stakingRewardRate[1][2].tierDuration = 2629743;
         stakingRewardRate[1][3].interest = 3;
-        stakingRewardRate[1][3].amountStakersLeft = 200;
+        stakingRewardRate[1][3].amountStakersLeft = 25;
         stakingRewardRate[1][3].tierDuration = 2629743;
         stakingRewardRate[1][4].interest = 4;
-        stakingRewardRate[1][4].amountStakersLeft = 100;
+        stakingRewardRate[1][4].amountStakersLeft = 25;
         stakingRewardRate[1][4].tierDuration = 2629743;
-        stakingRewardRate[1][5].interest = 4;
-        stakingRewardRate[1][5].amountStakersLeft = 100;
+        stakingRewardRate[1][5].interest = 5;
+        stakingRewardRate[1][5].amountStakersLeft = 25;
         stakingRewardRate[1][5].tierDuration = 2629743;
         //
         stakingRewardRate[2][1].interest = 1;
-        stakingRewardRate[2][1].amountStakersLeft = 200;
+        stakingRewardRate[2][1].amountStakersLeft = 25;
         stakingRewardRate[2][1].tierDuration = 5259486;
         stakingRewardRate[2][2].interest = 2;
-        stakingRewardRate[2][2].amountStakersLeft = 200;
+        stakingRewardRate[2][2].amountStakersLeft = 25;
         stakingRewardRate[2][2].tierDuration = 5259486;
         stakingRewardRate[2][3].interest = 3;
-        stakingRewardRate[2][3].amountStakersLeft = 200;
+        stakingRewardRate[2][3].amountStakersLeft = 25;
         stakingRewardRate[2][3].tierDuration = 5259486;
         stakingRewardRate[2][4].interest = 4;
-        stakingRewardRate[2][4].amountStakersLeft = 100;
+        stakingRewardRate[2][4].amountStakersLeft = 25;
         stakingRewardRate[2][4].tierDuration = 5259486;
-        stakingRewardRate[2][5].interest = 4;
-        stakingRewardRate[2][5].amountStakersLeft = 100;
+        stakingRewardRate[2][5].interest = 5;
+        stakingRewardRate[2][5].amountStakersLeft = 25;
         stakingRewardRate[2][5].tierDuration = 5259486;
         //
         stakingRewardRate[3][1].interest = 1;
-        stakingRewardRate[3][1].amountStakersLeft = 200;
+        stakingRewardRate[3][1].amountStakersLeft = 25;
         stakingRewardRate[3][1].tierDuration = 7889229;
         stakingRewardRate[3][2].interest = 2;
-        stakingRewardRate[3][2].amountStakersLeft = 200;
+        stakingRewardRate[3][2].amountStakersLeft = 25;
         stakingRewardRate[3][2].tierDuration = 7889229;
         stakingRewardRate[3][3].interest = 3;
-        stakingRewardRate[3][3].amountStakersLeft = 200;
+        stakingRewardRate[3][3].amountStakersLeft = 25;
         stakingRewardRate[3][3].tierDuration = 7889229;
         stakingRewardRate[3][4].interest = 4;
-        stakingRewardRate[3][4].amountStakersLeft = 200;
+        stakingRewardRate[3][4].amountStakersLeft = 25;
         stakingRewardRate[3][4].tierDuration = 7889229;
-        stakingRewardRate[3][5].interest = 4;
-        stakingRewardRate[3][5].amountStakersLeft = 200;
+        stakingRewardRate[3][5].interest = 5;
+        stakingRewardRate[3][5].amountStakersLeft = 25;
         stakingRewardRate[3][5].tierDuration = 7889229;
         //
-        stakingRewardRate[4][1].interest = 5;
-        stakingRewardRate[4][1].amountStakersLeft = 500;
+        stakingRewardRate[4][1].interest = 2;
+        stakingRewardRate[4][1].amountStakersLeft = 250;
         stakingRewardRate[4][1].tierDuration = 15778458;
-        stakingRewardRate[4][2].interest = 6;
-        stakingRewardRate[4][2].amountStakersLeft = 500;
+        stakingRewardRate[4][2].interest = 3;
+        stakingRewardRate[4][2].amountStakersLeft = 250;
         stakingRewardRate[4][2].tierDuration = 15778458;
-        stakingRewardRate[4][3].interest = 7;
-        stakingRewardRate[4][3].amountStakersLeft = 500;
+        stakingRewardRate[4][3].interest = 4;
+        stakingRewardRate[4][3].amountStakersLeft = 250;
         stakingRewardRate[4][3].tierDuration = 15778458;
-        stakingRewardRate[4][4].interest = 8;
-        stakingRewardRate[4][4].amountStakersLeft = 1000;
+        stakingRewardRate[4][4].interest = 5;
+        stakingRewardRate[4][4].amountStakersLeft = 1500;
         stakingRewardRate[4][4].tierDuration = 15778458;
-        stakingRewardRate[4][5].interest = 9;
-        stakingRewardRate[4][5].amountStakersLeft = 1000;
+        stakingRewardRate[4][5].interest = 6;
+        stakingRewardRate[4][5].amountStakersLeft = 1500;
         stakingRewardRate[4][5].tierDuration = 15778458;
         //
-        stakingRewardRate[5][1].interest = 6;
-        stakingRewardRate[5][1].amountStakersLeft = 500;
+        stakingRewardRate[5][1].interest = 3;
+        stakingRewardRate[5][1].amountStakersLeft = 250;
         stakingRewardRate[5][1].tierDuration = 31556916;
-        stakingRewardRate[5][2].interest = 7;
-        stakingRewardRate[5][2].amountStakersLeft = 500;
+        stakingRewardRate[5][2].interest = 4;
+        stakingRewardRate[5][2].amountStakersLeft = 250;
         stakingRewardRate[5][2].tierDuration = 31556916;
-        stakingRewardRate[5][3].interest = 8;
-        stakingRewardRate[5][3].amountStakersLeft = 500;
+        stakingRewardRate[5][3].interest = 5;
+        stakingRewardRate[5][3].amountStakersLeft = 250;
         stakingRewardRate[5][3].tierDuration = 31556916;
-        stakingRewardRate[5][4].interest = 9;
-        stakingRewardRate[5][4].amountStakersLeft = 1000;
+        stakingRewardRate[5][4].interest = 6;
+        stakingRewardRate[5][4].amountStakersLeft = 1500;
         stakingRewardRate[5][4].tierDuration = 31556916;
-        stakingRewardRate[5][5].interest = 10;
-        stakingRewardRate[5][5].amountStakersLeft = 1000;
+        stakingRewardRate[5][5].interest = 7;
+        stakingRewardRate[5][5].amountStakersLeft = 1500;
         stakingRewardRate[5][5].tierDuration = 31556916;
     }
 
@@ -305,7 +308,7 @@ contract Bank {
     NFTLoan NFT;
 
     function setNFT() public {
-        address newNFT = oracle.addressChange(50, "setNFT");
+        address newNFT = oracle.addressChange(51, "setNFT");
         NFT = NFTLoan(newNFT);
     }
 
@@ -460,6 +463,15 @@ contract Bank {
     function newPercentFee() public {
         uint256 newFee = oracle.numberChange(51, "newPercentFee");
         percentFee = newFee;
+    }
+
+    /**
+     * @dev Setter for penalty fee charged if user breaks staking contract
+     * earlier than agreed.
+     */
+    function newPenaltyFee() public {
+        uint256 newFee = oracle.numberChange(51, "newPenaltyFee");
+        penaltyFee = newFee;
     }
 
     /**
@@ -834,7 +846,7 @@ contract Bank {
             );
 
             require(
-                block.timestamp > 1,
+                block.timestamp > dueDate,
                 "Current staking period is not over yet"
             );
         }
@@ -895,7 +907,9 @@ contract Bank {
     }
 
     /**
-     * @dev
+     * @dev Helper function used to keep track of previous staking contracts
+     * with the user. If user is going down in tier, subtract his balance from
+     * the lending balance.
      */
     function lendingPoolWithdraw(uint256 _amount) internal {
         uint256 timeStakedTier = userBook[msg.sender].timeStakedTier;
@@ -908,9 +922,15 @@ contract Bank {
         }
     }
 
+    /**
+     * @dev Helper function used to keep track of previous staking contracts
+     * with the user. If user is going up in tier, add his balance to the
+     * lending balance.
+     */
     function lendingPoolDeposit() internal {
         uint256 timeStakedTier = userBook[msg.sender].timeStakedTier;
         uint256 amountStakedTier = userBook[msg.sender].amountStakedTier;
+
         if (amountStakedTier > 0) {
             if (amountStakedTier != 4 && amountStakedTier != 5) {
                 if (timeStakedTier != 4 && timeStakedTier != 5) {
@@ -957,7 +977,7 @@ contract Bank {
             userBook[msg.sender].depositTime
         );
 
-        require(block.timestamp >= 1, "Staking period is not over.");
+        require(block.timestamp >= dueDate, "Staking period is not over.");
 
         (
             tokensReserved,
@@ -977,7 +997,7 @@ contract Bank {
                 paidAdvanced,
                 100
             );
-            // IERC20(_tokenAddress).universalTransfer(msg.sender, tokensSent);
+            IERC20(_tokenAddress).universalTransfer(msg.sender, tokensSent);
 
             userBook[msg.sender].tokenReserved = SafeMath.add(
                 userBook[msg.sender].tokenReserved,
@@ -1217,7 +1237,7 @@ contract Bank {
             userBook[msg.sender].depositTime
         );
 
-        require(block.timestamp >= 1, "Staking period is not over.");
+        require(block.timestamp >= dueDate, "Staking period is not over.");
 
         lendingPoolWithdraw(_amount);
 
@@ -1267,10 +1287,10 @@ contract Bank {
 
         rewardWallet[msg.sender][_withdrawTokenAddress] = 0;
 
-        // IERC20(_withdrawTokenAddress).universalTransfer(
-        //     msg.sender,
-        //     totalBalance
-        // );
+        IERC20(_withdrawTokenAddress).universalTransfer(
+            msg.sender,
+            totalBalance
+        );
     }
 
     /**
@@ -1341,15 +1361,15 @@ contract Bank {
         }
 
         if (relativeOwed > tokensReserved) {
-            // IERC20(previousTokenAddress).universalTransfer(
-            //     msg.sender,
-            //     tokensReserved
-            // );
+            IERC20(previousTokenAddress).universalTransfer(
+                msg.sender,
+                tokensReserved
+            );
         } else {
-            // IERC20(previousTokenAddress).universalTransfer(
-            //     msg.sender,
-            //     relativeOwed
-            // );
+            IERC20(previousTokenAddress).universalTransfer(
+                msg.sender,
+                relativeOwed
+            );
         }
     }
 
@@ -1372,27 +1392,29 @@ contract Bank {
 
     // ****************************** Lending **********************************
     /**
-     * @dev Variable displays information on ETH staked in the treasury for time tiers 4 and 5.
+     * @dev uint displays information on ETH staked in the treasury for time
+     * tiers 4 and 5.
      */
     uint256 public lendingPool;
 
     /**
-     * @dev
+     * @dev Balance sent to lending contract.
      */
     uint256 public balanceLent;
 
     /**
-     * @dev
+     * @dev Address of lending contract.
      */
     address public LendingContract;
 
     /**
-     * @dev
+     * @dev uint keeps percentage of what can be transfered to lending
+     * contract
      */
     uint256 public limitLending;
 
     /**
-     * @dev
+     * @dev Setter function for the designated contract for lending.
      */
     function setLendingContract() public {
         address newLendingContract = oracle.addressChange(
@@ -1403,7 +1425,10 @@ contract Bank {
     }
 
     /**
-     * @dev
+     * @dev Function sends available balance from the lending pool to designated
+     * lending contract. The amount is determined by a limiter that protects the
+     * wellbeing of the treasury.
+     * @notice only devs can trigger this action.
      */
     function fundLendingContract() public payable isDev {
         uint256 lendingAvailable;
