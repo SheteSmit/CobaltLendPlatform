@@ -473,14 +473,6 @@ contract Bank {
     /**
      * @dev
      */
-    function newPenaltyFee() public {
-        uint256 newFee = oracle.numberChange(51, "newPenaltyFee");
-        penaltyFee = newFee;
-    }
-
-    /**
-     * @dev
-     */
     function newFeeThreshold() public {
         uint256 newThreshold = oracle.numberChange(51, "newFeeThreshold");
         feeThreshold = newThreshold;
@@ -916,6 +908,21 @@ contract Bank {
         }
     }
 
+    function lendingPoolDeposit() internal {
+        uint256 timeStakedTier = userBook[msg.sender].timeStakedTier;
+        uint256 amountStakedTier = userBook[msg.sender].amountStakedTier;
+        if (amountStakedTier > 0) {
+            if (amountStakedTier != 4 || amountStakedTier != 5) {
+                if (timeStakedTier != 4 || timeStakedTier != 5) {
+                    lendingPool = SafeMath.add(
+                        lendingPool,
+                        userBook[msg.sender].ethBalance
+                    );
+                }
+            }
+        }
+    }
+
     /**
      * @dev Function stakes ethereum based on the user's desired duration and token of reward
      * @param _timeStakedTier intended duration of their desired staking period
@@ -976,6 +983,8 @@ contract Bank {
                 userBook[msg.sender].tokenReserved,
                 SafeMath.sub(tokensReserved, tokensSent)
             );
+
+            lendingPoolDeposit();
 
             lendingPool = SafeMath.add(
                 lendingPool,
