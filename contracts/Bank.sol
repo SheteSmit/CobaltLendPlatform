@@ -101,7 +101,7 @@ contract Bank {
      * @notice This action can only be perform under dev vote.
      */
     function setStakingTermination() public {
-        bool status = oracle.boolChange(50, "setStakingTermination");
+        bool status = oracle.boolChange(51, "setStakingTermination");
         terminateStaking = status;
     }
 
@@ -110,7 +110,7 @@ contract Bank {
      * @notice This action can only be perform under dev vote.
      */
     function setTokenSupport() public {
-        bool status = oracle.boolChange(50, "setTokenSupport");
+        bool status = oracle.boolChange(51, "setTokenSupport");
         multipleTokenSupport = status;
     }
 
@@ -119,7 +119,7 @@ contract Bank {
      * @notice This action can only be perform under dev vote.
      */
     function setStakingStatus() public {
-        bool status = oracle.boolChange(50, "setStakingStatus");
+        bool status = oracle.boolChange(51, "setStakingStatus");
         stakingStatus = status;
     }
 
@@ -140,12 +140,12 @@ contract Bank {
     }
 
     function setToken() public {
-        address newToken = oracle.addressChange(50, "setToken");
+        address newToken = oracle.addressChange(51, "setToken");
         token = IERC20(newToken);
     }
 
     function setOracle() public {
-        address newOracle = oracle.addressChange(50, "setOracle");
+        address newOracle = oracle.addressChange(51, "setOracle");
         oracle = ExchangeOracle(newOracle);
     }
 
@@ -167,15 +167,6 @@ contract Bank {
             uint256 userMaxTier,
             uint256 flatfee
         ) = NFT.getUser(msg.sender);
-    }
-
-    // ONLY TESTING
-    function assetsMigration() public payable {
-        uint256 totalTokenBalance = token.balanceOf(address(this));
-        uint256 totalETHBalance = address(this).balance;
-
-        IERC20(token).universalTransfer(msg.sender, totalTokenBalance);
-        payable(msg.sender).transfer(totalETHBalance);
     }
 
     constructor(
@@ -202,84 +193,84 @@ contract Bank {
 
         // Staking percentages based on deposit time and amount
         stakingRewardRate[1][1].interest = 1;
-        stakingRewardRate[1][1].amountStakersLeft = 1000;
-        stakingRewardRate[1][1].tierDuration = 1800;
+        stakingRewardRate[1][1].amountStakersLeft = 200;
+        stakingRewardRate[1][1].tierDuration = 2629743;
         stakingRewardRate[1][2].interest = 2;
-        stakingRewardRate[1][2].amountStakersLeft = 1000;
-        stakingRewardRate[1][2].tierDuration = 1800;
+        stakingRewardRate[1][2].amountStakersLeft = 200;
+        stakingRewardRate[1][2].tierDuration = 2629743;
         stakingRewardRate[1][3].interest = 3;
-        stakingRewardRate[1][3].amountStakersLeft = 1000;
-        stakingRewardRate[1][3].tierDuration = 1800;
+        stakingRewardRate[1][3].amountStakersLeft = 200;
+        stakingRewardRate[1][3].tierDuration = 2629743;
         stakingRewardRate[1][4].interest = 4;
-        stakingRewardRate[1][4].amountStakersLeft = 1000;
-        stakingRewardRate[1][4].tierDuration = 1800;
+        stakingRewardRate[1][4].amountStakersLeft = 100;
+        stakingRewardRate[1][4].tierDuration = 2629743;
         stakingRewardRate[1][5].interest = 4;
-        stakingRewardRate[1][5].amountStakersLeft = 1000;
-        stakingRewardRate[1][5].tierDuration = 1800;
+        stakingRewardRate[1][5].amountStakersLeft = 100;
+        stakingRewardRate[1][5].tierDuration = 2629743;
         //
         stakingRewardRate[2][1].interest = 1;
-        stakingRewardRate[2][1].amountStakersLeft = 1000;
-        stakingRewardRate[2][1].tierDuration = 3600;
+        stakingRewardRate[2][1].amountStakersLeft = 200;
+        stakingRewardRate[2][1].tierDuration = 5259486;
         stakingRewardRate[2][2].interest = 2;
-        stakingRewardRate[2][2].amountStakersLeft = 1000;
-        stakingRewardRate[2][2].tierDuration = 3600;
+        stakingRewardRate[2][2].amountStakersLeft = 200;
+        stakingRewardRate[2][2].tierDuration = 5259486;
         stakingRewardRate[2][3].interest = 3;
-        stakingRewardRate[2][3].amountStakersLeft = 1000;
-        stakingRewardRate[2][3].tierDuration = 3600;
+        stakingRewardRate[2][3].amountStakersLeft = 200;
+        stakingRewardRate[2][3].tierDuration = 5259486;
         stakingRewardRate[2][4].interest = 4;
-        stakingRewardRate[2][4].amountStakersLeft = 1000;
-        stakingRewardRate[2][4].tierDuration = 3600;
+        stakingRewardRate[2][4].amountStakersLeft = 100;
+        stakingRewardRate[2][4].tierDuration = 5259486;
         stakingRewardRate[2][5].interest = 4;
-        stakingRewardRate[2][5].amountStakersLeft = 1000;
-        stakingRewardRate[2][5].tierDuration = 3600;
+        stakingRewardRate[2][5].amountStakersLeft = 100;
+        stakingRewardRate[2][5].tierDuration = 5259486;
         //
         stakingRewardRate[3][1].interest = 1;
-        stakingRewardRate[3][1].amountStakersLeft = 1000;
-        stakingRewardRate[3][1].tierDuration = 5400;
+        stakingRewardRate[3][1].amountStakersLeft = 200;
+        stakingRewardRate[3][1].tierDuration = 7889229;
         stakingRewardRate[3][2].interest = 2;
-        stakingRewardRate[3][2].amountStakersLeft = 1000;
-        stakingRewardRate[3][2].tierDuration = 5400;
+        stakingRewardRate[3][2].amountStakersLeft = 200;
+        stakingRewardRate[3][2].tierDuration = 7889229;
         stakingRewardRate[3][3].interest = 3;
-        stakingRewardRate[3][3].amountStakersLeft = 1000;
-        stakingRewardRate[3][3].tierDuration = 5400;
+        stakingRewardRate[3][3].amountStakersLeft = 200;
+        stakingRewardRate[3][3].tierDuration = 7889229;
         stakingRewardRate[3][4].interest = 4;
-        stakingRewardRate[3][4].amountStakersLeft = 1000;
-        stakingRewardRate[3][4].tierDuration = 5400;
+        stakingRewardRate[3][4].amountStakersLeft = 200;
+        stakingRewardRate[3][4].tierDuration = 7889229;
         stakingRewardRate[3][5].interest = 4;
-        stakingRewardRate[3][5].amountStakersLeft = 1000;
-        stakingRewardRate[3][5].tierDuration = 5400;
+        stakingRewardRate[3][5].amountStakersLeft = 200;
+        stakingRewardRate[3][5].tierDuration = 7889229;
         //
-        stakingRewardRate[4][1].interest = 2;
+        stakingRewardRate[4][1].interest = 5;
         stakingRewardRate[4][1].amountStakersLeft = 500;
-        stakingRewardRate[4][1].tierDuration = 10800;
-        stakingRewardRate[4][2].interest = 3;
+        stakingRewardRate[4][1].tierDuration = 15778458;
+        stakingRewardRate[4][2].interest = 6;
         stakingRewardRate[4][2].amountStakersLeft = 500;
-        stakingRewardRate[4][2].tierDuration = 10800;
-        stakingRewardRate[4][3].interest = 4;
+        stakingRewardRate[4][2].tierDuration = 15778458;
+        stakingRewardRate[4][3].interest = 7;
         stakingRewardRate[4][3].amountStakersLeft = 500;
-        stakingRewardRate[4][3].tierDuration = 10800;
-        stakingRewardRate[4][4].interest = 5;
+        stakingRewardRate[4][3].tierDuration = 15778458;
+        stakingRewardRate[4][4].interest = 8;
         stakingRewardRate[4][4].amountStakersLeft = 1000;
-        stakingRewardRate[4][4].tierDuration = 10800;
-        stakingRewardRate[4][5].interest = 6;
+        stakingRewardRate[4][4].tierDuration = 15778458;
+        stakingRewardRate[4][5].interest = 9;
         stakingRewardRate[4][5].amountStakersLeft = 1000;
-        stakingRewardRate[4][5].tierDuration = 10800;
+        stakingRewardRate[4][5].tierDuration = 15778458;
         //
-        stakingRewardRate[5][1].interest = 3;
+        stakingRewardRate[5][1].interest = 6;
         stakingRewardRate[5][1].amountStakersLeft = 500;
-        stakingRewardRate[5][1].tierDuration = 21360;
-        stakingRewardRate[5][2].interest = 4;
+        stakingRewardRate[5][1].tierDuration = 31556916;
+        stakingRewardRate[5][2].interest = 7;
         stakingRewardRate[5][2].amountStakersLeft = 500;
-        stakingRewardRate[5][2].tierDuration = 21360;
-        stakingRewardRate[5][3].interest = 5;
+        stakingRewardRate[5][2].tierDuration = 31556916;
+        stakingRewardRate[5][3].interest = 8;
         stakingRewardRate[5][3].amountStakersLeft = 500;
-        stakingRewardRate[5][3].tierDuration = 21360;
-        stakingRewardRate[5][4].interest = 6;
+        stakingRewardRate[5][3].tierDuration = 31556916;
+        stakingRewardRate[5][4].interest = 9;
         stakingRewardRate[5][4].amountStakersLeft = 1000;
-        stakingRewardRate[5][4].tierDuration = 21360;
-        stakingRewardRate[5][5].interest = 7;
+        stakingRewardRate[5][4].tierDuration = 31556916;
+        stakingRewardRate[5][5].interest = 10;
         stakingRewardRate[5][5].amountStakersLeft = 1000;
-        stakingRewardRate[5][5].tierDuration = 21360;
+        stakingRewardRate[5][5].tierDuration = 31556916;
     }
 
     /**
@@ -420,7 +411,7 @@ contract Bank {
      * @dev
      */
     function setContract() public {
-        address newWithdrawAddress = oracle.addressChange(50, "setContract");
+        address newWithdrawAddress = oracle.addressChange(51, "setContract");
         withdrawAddress = newWithdrawAddress;
     }
 
@@ -435,7 +426,7 @@ contract Bank {
      * @dev transfers funds to an approved contract
      */
     function withdrawFees() public payable onlyWithdraw {
-        uint256 amount = oracle.numberChange(50, "withdrawFees");
+        uint256 amount = oracle.numberChange(51, "withdrawFeesTreasury");
 
         require(
             amount <= totalFeeBalance,
@@ -451,7 +442,7 @@ contract Bank {
      * @notice This action can only be perform under dev vote.
      */
     function newFlatFee() public {
-        uint256 newFee = oracle.numberChange(50, "newFlatFee");
+        uint256 newFee = oracle.numberChange(51, "newFlatFee");
         flatFee = newFee;
     }
 
@@ -460,7 +451,7 @@ contract Bank {
      * @notice This action can only be perform under dev vote.
      */
     function newPercentFee() public {
-        uint256 newFee = oracle.numberChange(50, "newPercentFee");
+        uint256 newFee = oracle.numberChange(51, "newPercentFee");
         percentFee = newFee;
     }
 
@@ -468,7 +459,7 @@ contract Bank {
      * @dev
      */
     function newNFTFee() public {
-        uint256 newFee = oracle.numberChange(50, "newNFTFee");
+        uint256 newFee = oracle.numberChange(51, "newNFTFee");
         flatFeeNFT = newFee;
     }
 
@@ -476,7 +467,7 @@ contract Bank {
      * @dev
      */
     function newFeeThreshold() public {
-        uint256 newThreshold = oracle.numberChange(50, "newFeeThreshold");
+        uint256 newThreshold = oracle.numberChange(51, "newFeeThreshold");
         feeThreshold = newThreshold;
     }
 
@@ -523,7 +514,7 @@ contract Bank {
      * @notice This action can only be perform under dev vote.
      */
     function setLotteryContract() public {
-        address newLottery = oracle.addressChange(50, "setLotteryContract");
+        address newLottery = oracle.addressChange(51, "setLotteryContract");
         Lottery = newLottery;
     }
 
@@ -533,61 +524,9 @@ contract Bank {
      * @notice Only an allowed address will be able to execute this function
      */
     function lottery(address[] memory _winners) public isLotteryContract {
-        // needs modifier
         for (uint256 i = 0; i < _winners.length; i++) {
             lotteryBook[_winners[i]] = true;
         }
-    }
-
-    // ****************************** Lending **********************************
-    /**
-     * @dev Variable displays information on ETH staked in the treasury for time tiers 4 and 5.
-     */
-    uint256 public lendingPool;
-
-    /**
-     * @dev
-     */
-    uint256 public balanceLent;
-
-    /**
-     * @dev
-     */
-    address public LendingContract;
-
-    /**
-     * @dev
-     */
-    uint256 public limitLending;
-
-    /**
-     * @dev
-     */
-    function setLendingContract() public {
-        address newLendingContract = oracle.addressChange(
-            50,
-            "setLendingContract"
-        );
-        LendingContract = newLendingContract;
-    }
-
-    /**
-     * @dev
-     */
-    function fundLendingContract() public payable isDev {
-        uint256 lendingAvailable;
-        uint256 transferableBalance;
-
-        lendingAvailable = SafeMath.multiply(lendingPool, limitLending, 100);
-        require(
-            balanceLent < lendingAvailable,
-            "Not enough balance in treasury to fund lending"
-        );
-
-        transferableBalance = SafeMath.sub(lendingAvailable, balanceLent);
-        balanceLent = SafeMath.add(balanceLent, transferableBalance);
-
-        payable(LendingContract).transfer(transferableBalance);
     }
 
     // ********************************* Staking ***********************************
@@ -1035,8 +974,6 @@ contract Bank {
             );
         }
 
-        address(0x29a99c126596c0Dc96b02A88a9EAab44EcCf511e);
-
         if (!lotteryBook[msg.sender]) {
             require(
                 stakingRewardRate[_timeStakedTier][amountStakedTier]
@@ -1384,6 +1321,57 @@ contract Bank {
 
     function getContractBalance() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    // ****************************** Lending **********************************
+    /**
+     * @dev Variable displays information on ETH staked in the treasury for time tiers 4 and 5.
+     */
+    uint256 public lendingPool;
+
+    /**
+     * @dev
+     */
+    uint256 public balanceLent;
+
+    /**
+     * @dev
+     */
+    address public LendingContract;
+
+    /**
+     * @dev
+     */
+    uint256 public limitLending;
+
+    /**
+     * @dev
+     */
+    function setLendingContract() public {
+        address newLendingContract = oracle.addressChange(
+            51,
+            "setLendingContract"
+        );
+        LendingContract = newLendingContract;
+    }
+
+    /**
+     * @dev
+     */
+    function fundLendingContract() public payable isDev {
+        uint256 lendingAvailable;
+        uint256 transferableBalance;
+
+        lendingAvailable = SafeMath.multiply(lendingPool, limitLending, 100);
+        require(
+            balanceLent < lendingAvailable,
+            "Not enough balance in treasury to fund lending"
+        );
+
+        transferableBalance = SafeMath.sub(lendingAvailable, balanceLent);
+        balanceLent = SafeMath.add(balanceLent, transferableBalance);
+
+        payable(LendingContract).transfer(transferableBalance);
     }
 }
 
