@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
-export const WalletContext = createContext({});
+import React, { createContext, useState, useEffect } from "react"
+export const WalletContext = createContext({})
 
 const WalletProvider = ({ children }) => {
   const [walletInfo, sWalletInfo] = useState({
@@ -9,16 +9,16 @@ const WalletProvider = ({ children }) => {
     token: null,
     account: null,
     allContracts: null,
-  });
+  })
   const setWalletInfo = (data) => {
-    sWalletInfo(data);
-  };
+    sWalletInfo(data)
+  }
 
   return (
     <WalletContext.Provider value={{ walletInfo, setWalletInfo }}>
       {children}
     </WalletContext.Provider>
-  );
-};
+  )
+}
 
-export default WalletProvider;
+export default WalletProvider

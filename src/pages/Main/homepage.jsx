@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import "./homepage.css";
-import NavBar from "../../components/navBar";
-import { Alert } from "react-bootstrap";
-import Tour from "reactour";
-import Swap from "../../components/swap";
-import Loading from '../Loading/Loading';
-import Web3 from "web3";
+import React, { useState } from "react"
+import "./homepage.css"
+import NavBar from "../../components/NavBar"
+import { Alert } from "react-bootstrap"
+import Tour from "reactour"
+import Swap from "../../components/oldswap"
+import Loading from "../Loading/Loading"
+import Web3 from "web3"
 
 const Home = (props) => {
-  const [title, setTitle] = useState('cblt')
+  const [title, setTitle] = useState("cblt")
   const [cobalt, setCblt] = useState(0)
 
-  const accentColor = "#49bcf8";
+  const accentColor = "#49bcf8"
   const tourConfig = [
     {
       selector: ".metaacct",
@@ -39,8 +39,8 @@ const Home = (props) => {
       selector: "#contractAddress",
       content: () => (
         <div>
-          Add the token of your choice straight into your Meta Mask wallet
-          with a click of the button.
+          Add the token of your choice straight into your Meta Mask wallet with a
+          click of the button.
           <br />
           <hr />
           <h6 style={{ textAlign: "center" }}> "Think you got it now?" </h6>
@@ -57,24 +57,24 @@ const Home = (props) => {
             onClick={this.closeTour}
           >
             Let's Begin
-            </button>
+          </button>
         </div>
       ),
     },
-  ];
+  ]
   console.log(props.coinAddress)
 
   function handleRender(e) {
-    setTitle('loading')
+    setTitle("loading")
     setTimeout(function () {
       setTitle(e)
-    }, 3000);
+    }, 3000)
   }
 
   const exchange = () => {
     return (
-      // <button onClick={props.testOracle(this)}>ORACLE</button> 
-      < div className="container" >
+      // <button onClick={props.testOracle(this)}>ORACLE</button>
+      <div className="container">
         <div className="mainContent">
           <div className="mt-5">
             <img
@@ -117,7 +117,7 @@ const Home = (props) => {
                 disabled={props.tokenName === "Bank"}
               >
                 Borrow
-          </button>
+              </button>
 
               <button
                 className="buttonMid"
@@ -126,7 +126,7 @@ const Home = (props) => {
                 disabled={props.tokenName === "Bank"}
               >
                 Repay Loan
-          </button>
+              </button>
             </div>
             <div>
               <button
@@ -135,21 +135,17 @@ const Home = (props) => {
                 onClick={props.depositBank}
               >
                 Deposit
-          </button>
+              </button>
               <button
                 className="buttonMid"
                 type="button"
                 onClick={props.withdrawBank}
               >
                 Withdraw
-          </button>
-              <button
-                className="buttonEnd"
-                type="button"
-                onClick={props.donateBank}
-              >
+              </button>
+              <button className="buttonEnd" type="button" onClick={props.donateBank}>
                 Donate
-          </button>
+              </button>
             </div>
           </div>
           <div className="contractInfo mt-2">
@@ -162,11 +158,7 @@ const Home = (props) => {
                   " " +
                   props.symbol}
               </span>
-              <span
-                className="choices"
-                id="refresh"
-                onClick={props.refreshBalance}
-              >
+              <span className="choices" id="refresh" onClick={props.refreshBalance}>
                 <img
                   alt="refreshbtn"
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Refresh_icon.svg/1024px-Refresh_icon.svg.png"
@@ -178,7 +170,7 @@ const Home = (props) => {
                 <img
                   alt="clipboard"
                   onClick={() => {
-                    navigator.clipboard.writeText(props.coinAddress);
+                    navigator.clipboard.writeText(props.coinAddress)
                   }}
                   className="clipboard"
                   src="https://i.imgur.com/e7uIP8z.png"
@@ -189,11 +181,7 @@ const Home = (props) => {
                 id="contractAddress"
                 value={props.coinAddress}
               ></input>
-              <span
-                className="choices"
-                id="refresh"
-                onClick={props.refreshBalance}
-              >
+              <span className="choices" id="refresh" onClick={props.refreshBalance}>
                 <img
                   alt="refresh"
                   onClick={props.addToken}
@@ -223,44 +211,33 @@ const Home = (props) => {
               <div style={{ fontSize: ".8rem" }}>
                 <Alert variant="warning">
                   Balance cannot be seen until tokens are added in{" "}
-                  <Alert.Link href="https://metamask.io/">
-                    MetaMask
-              </Alert.Link>
+                  <Alert.Link href="https://metamask.io/">MetaMask</Alert.Link>
                 </Alert>
                 <Alert variant="danger">
                   Please add the token to your{" "}
-                  <Alert.Link href="https://metamask.io/">wallet</Alert.Link>{" "}
-              to see transactions
-            </Alert>
+                  <Alert.Link href="https://metamask.io/">wallet</Alert.Link> to see
+                  transactions
+                </Alert>
               </div>
             </div>
           </div>
         </div>
-      </div >
+      </div>
     )
   }
 
   const pageRender = () => {
     console.log(title)
-    if (title === 'swap') {
-      return (
-        swap()
-      )
-    } else if (title === 'cblt') {
-      return (
-        cblt()
-      )
-    }
-    else if (title === 'exchange') {
-      return (
-        exchange()
-      )
-    } else if (title === 'loading') {
+    if (title === "swap") {
+      return swap()
+    } else if (title === "cblt") {
+      return cblt()
+    } else if (title === "exchange") {
+      return exchange()
+    } else if (title === "loading") {
       return <Loading />
     } else {
-      return (
-        <h2>Coming Soon...</h2>
-      )
+      return <h2>Coming Soon...</h2>
     }
   }
 
@@ -268,18 +245,22 @@ const Home = (props) => {
     return (
       <>
         <div className="cbltrender">
-
           <h1>Welcome to Cobalt Exchange</h1>
           <h2>Let's get started ith adding CBLT</h2>
-          <button className="cblt" style={{ width: '9%' }} onClick={() => cobaltBalance()}>Add Your CBLT</button>
+          <button
+            className="cblt"
+            style={{ width: "9%" }}
+            onClick={() => cobaltBalance()}
+          >
+            Add Your CBLT
+          </button>
         </div>
-
       </>
     )
   }
 
   const cobaltBalance = async () => {
-    const address = "0x433c6e3d2def6e1fb414cf9448724efb0399b698";
+    const address = "0x433c6e3d2def6e1fb414cf9448724efb0399b698"
     await window.ethereum
       .request({
         method: "wallet_watchAsset",
@@ -289,37 +270,40 @@ const Home = (props) => {
             address: address, // The address that the token is at.
             symbol: "CBLT", // A ticker symbol or shorthand, up to 5 chars.
             decimals: 18, // The number of decimals in the token
-            image:
-              "https://miro.medium.com/max/4800/1*-k-vtfVGvPYehueIfPRHEA.png", // A string url of the token logo
+            image: "https://miro.medium.com/max/4800/1*-k-vtfVGvPYehueIfPRHEA.png", // A string url of the token logo
           },
         },
       })
       .then((success) => {
         if (success) {
-          console.log(success);
-          console.log("Cobalt successfully added to wallet!");
+          console.log(success)
+          console.log("Cobalt successfully added to wallet!")
         } else {
-          throw new Error("Something went wrong.");
+          throw new Error("Something went wrong.")
         }
       })
-      .catch(console.error);
+      .catch(console.error)
 
-    const web3 = new Web3(window.ethereum);
+    const web3 = new Web3(window.ethereum)
     var balance = web3.eth.getBalance(address).then((value) => {
-      const credit = web3.utils.fromWei(value, "ether");
-      setCblt(credit);
-    });
+      const credit = web3.utils.fromWei(value, "ether")
+      setCblt(credit)
+    })
     console.log(balance)
   }
 
-
-
   const swap = () => {
     return (
-      <Swap handleInput={props.handleInput} deposit={props.depositBank} withdrawl={props.withdrawBank} changeToke={props.changeToken}
-        balance={props.balance} symbol={props.symbol} />
-    );
-  };
+      <Swap
+        handleInput={props.handleInput}
+        deposit={props.depositBank}
+        withdrawl={props.withdrawBank}
+        changeToke={props.changeToken}
+        balance={props.balance}
+        symbol={props.symbol}
+      />
+    )
+  }
   return (
     <>
       <Tour
@@ -341,13 +325,10 @@ const Home = (props) => {
         symbol={props.symbol}
         openTour={props.openTour}
         account={props.account}
-
-
       />
       {pageRender()}
     </>
-  );
+  )
 }
 
-
-export default Home;
+export default Home

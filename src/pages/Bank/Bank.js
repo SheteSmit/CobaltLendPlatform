@@ -1,18 +1,19 @@
-import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
-import { Button, TextField } from '@material-ui/core';
+import styled from "styled-components"
+import { useForm } from "react-hook-form"
+import { Button, TextField } from "@material-ui/core"
+
 export default function Bank() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm()
   async function submit(data) {
     switch (data.action) {
-      case 'deposit': {
-        break;
+      case "deposit": {
+        break
       }
-      case 'withdraw': {
-        break;
+      case "withdraw": {
+        break
       }
       default:
-        return;
+        return
     }
   }
   return (
@@ -56,7 +57,7 @@ export default function Bank() {
               size="small"
             />
           </Col>
-          <img src="CobaltLogo.jpg" style={{ width: '30%' }} alt="logo" />
+          <img src="CobaltLogo.jpg" style={{ width: "30%" }} alt="logo" />
           <Col>
             <TextField
               variant="outlined"
@@ -79,15 +80,15 @@ export default function Bank() {
           className="form-input"
           type="number"
           placeholder="0.0"
-          {...register('amount')}
+          {...register("amount")}
         />
-        <select {...register('action')}>
+        <select {...register("action")}>
           <option value="withdraw">Withdraw</option>
           <option value="deposit">Deposit</option>
         </select>
       </form>
     </>
-  );
+  )
 }
 
 const SpaceAroundRow = styled.div`
@@ -95,7 +96,7 @@ const SpaceAroundRow = styled.div`
   flex-direction: row;
   justify-content: space-around;
   margin: 2% 0 2% 0;
-`;
+`
 
 // const CenterRow = styled.div`
 //   display: flex;
@@ -106,10 +107,10 @@ const SpaceAroundRow = styled.div`
 const Spacer = styled.div`
   display: inline-block;
   width: 1px;
-`;
+`
 
 const Col = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-`;
+`

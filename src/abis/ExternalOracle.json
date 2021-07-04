@@ -48,21 +48,21 @@
     "absolutePath": "/Users/christianroque/Desktop/TungstenGroupProject/contracts/ExternalOracle.sol",
     "exportedSymbols": {
       "ExternalOracle": [
-        5222
+        5425
       ],
       "Ownable": [
-        7210
+        7413
       ],
       "SafeMath": [
-        7573
+        7776
       ]
     },
-    "id": 5223,
+    "id": 5426,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5201,
+        "id": 5404,
         "literals": [
           "solidity",
           ">=",
@@ -78,10 +78,10 @@
       {
         "absolutePath": "/Users/christianroque/Desktop/TungstenGroupProject/contracts/interfaces/Ownable.sol",
         "file": "./interfaces/Ownable.sol",
-        "id": 5202,
+        "id": 5405,
         "nodeType": "ImportDirective",
-        "scope": 5223,
-        "sourceUnit": 7211,
+        "scope": 5426,
+        "sourceUnit": 7414,
         "src": "66:34:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -89,10 +89,10 @@
       {
         "absolutePath": "/Users/christianroque/Desktop/TungstenGroupProject/contracts/interfaces/SafeMath.sol",
         "file": "./interfaces/SafeMath.sol",
-        "id": 5203,
+        "id": 5406,
         "nodeType": "ImportDirective",
-        "scope": 5223,
-        "sourceUnit": 7574,
+        "scope": 5426,
+        "sourceUnit": 7777,
         "src": "101:35:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -103,23 +103,23 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 5222,
+        "id": 5425,
         "linearizedBaseContracts": [
-          5222
+          5425
         ],
         "name": "ExternalOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 5212,
+              "id": 5415,
               "nodeType": "Block",
               "src": "275:25:3",
               "statements": [
                 {
                   "expression": {
                     "hexValue": "31",
-                    "id": 5210,
+                    "id": 5413,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -133,31 +133,31 @@
                     },
                     "value": "1"
                   },
-                  "functionReturnParameters": 5209,
-                  "id": 5211,
+                  "functionReturnParameters": 5412,
+                  "id": 5414,
                   "nodeType": "Return",
                   "src": "285:8:3"
                 }
               ]
             },
             "functionSelector": "729f20c7",
-            "id": 5213,
+            "id": 5416,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getRelativePrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5206,
+              "id": 5409,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5205,
+                  "id": 5408,
                   "mutability": "mutable",
                   "name": "_tokenAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5213,
+                  "scope": 5416,
                   "src": "194:21:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -166,7 +166,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 5204,
+                    "id": 5407,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "194:7:3",
@@ -182,16 +182,16 @@
               "src": "193:23:3"
             },
             "returnParameters": {
-              "id": 5209,
+              "id": 5412,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5208,
+                  "id": 5411,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5213,
+                  "scope": 5416,
                   "src": "262:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -200,7 +200,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5207,
+                    "id": 5410,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "262:7:3",
@@ -214,7 +214,7 @@
               ],
               "src": "261:9:3"
             },
-            "scope": 5222,
+            "scope": 5425,
             "src": "168:132:3",
             "stateMutability": "view",
             "virtual": false,
@@ -222,14 +222,14 @@
           },
           {
             "body": {
-              "id": 5220,
+              "id": 5423,
               "nodeType": "Block",
               "src": "359:25:3",
               "statements": [
                 {
                   "expression": {
                     "hexValue": "31",
-                    "id": 5218,
+                    "id": 5421,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -243,37 +243,37 @@
                     },
                     "value": "1"
                   },
-                  "functionReturnParameters": 5217,
-                  "id": 5219,
+                  "functionReturnParameters": 5420,
+                  "id": 5422,
                   "nodeType": "Return",
                   "src": "369:8:3"
                 }
               ]
             },
             "functionSelector": "039ba6be",
-            "id": 5221,
+            "id": 5424,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getPriceETH",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 5214,
+              "id": 5417,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "326:2:3"
             },
             "returnParameters": {
-              "id": 5217,
+              "id": 5420,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5216,
+                  "id": 5419,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5221,
+                  "scope": 5424,
                   "src": "350:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -282,7 +282,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5215,
+                    "id": 5418,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "350:7:3",
@@ -296,14 +296,14 @@
               ],
               "src": "349:9:3"
             },
-            "scope": 5222,
+            "scope": 5425,
             "src": "306:78:3",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 5223,
+        "scope": 5426,
         "src": "138:248:3"
       }
     ],
@@ -314,13 +314,13 @@
       "absolutePath": "/Users/christianroque/Desktop/TungstenGroupProject/contracts/ExternalOracle.sol",
       "exportedSymbols": {
         "ExternalOracle": [
-          5222
+          5425
         ],
         "Ownable": [
-          7210
+          7413
         ],
         "SafeMath": [
-          7573
+          7776
         ]
       },
       "license": "MIT"
@@ -338,37 +338,37 @@
             ".0"
           ]
         },
-        "id": 5201,
+        "id": 5404,
         "name": "PragmaDirective",
         "src": "32:32:3"
       },
       {
         "attributes": {
-          "SourceUnit": 7211,
+          "SourceUnit": 7414,
           "absolutePath": "/Users/christianroque/Desktop/TungstenGroupProject/contracts/interfaces/Ownable.sol",
           "file": "./interfaces/Ownable.sol",
-          "scope": 5223,
+          "scope": 5426,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 5202,
+        "id": 5405,
         "name": "ImportDirective",
         "src": "66:34:3"
       },
       {
         "attributes": {
-          "SourceUnit": 7574,
+          "SourceUnit": 7777,
           "absolutePath": "/Users/christianroque/Desktop/TungstenGroupProject/contracts/interfaces/SafeMath.sol",
           "file": "./interfaces/SafeMath.sol",
-          "scope": 5223,
+          "scope": 5426,
           "symbolAliases": [
             null
           ],
           "unitAlias": ""
         },
-        "id": 5203,
+        "id": 5406,
         "name": "ImportDirective",
         "src": "101:35:3"
       },
@@ -384,10 +384,10 @@
           "contractKind": "contract",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
-            5222
+            5425
           ],
           "name": "ExternalOracle",
-          "scope": 5223
+          "scope": 5426
         },
         "children": [
           {
@@ -400,7 +400,7 @@
                 null
               ],
               "name": "getRelativePrice",
-              "scope": 5222,
+              "scope": 5425,
               "stateMutability": "view",
               "virtual": false,
               "visibility": "public"
@@ -413,7 +413,7 @@
                       "constant": false,
                       "mutability": "mutable",
                       "name": "_tokenAddress",
-                      "scope": 5213,
+                      "scope": 5416,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -426,17 +426,17 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
-                        "id": 5204,
+                        "id": 5407,
                         "name": "ElementaryTypeName",
                         "src": "194:7:3"
                       }
                     ],
-                    "id": 5205,
+                    "id": 5408,
                     "name": "VariableDeclaration",
                     "src": "194:21:3"
                   }
                 ],
-                "id": 5206,
+                "id": 5409,
                 "name": "ParameterList",
                 "src": "193:23:3"
               },
@@ -447,7 +447,7 @@
                       "constant": false,
                       "mutability": "mutable",
                       "name": "",
-                      "scope": 5213,
+                      "scope": 5416,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -459,17 +459,17 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 5207,
+                        "id": 5410,
                         "name": "ElementaryTypeName",
                         "src": "262:7:3"
                       }
                     ],
-                    "id": 5208,
+                    "id": 5411,
                     "name": "VariableDeclaration",
                     "src": "262:7:3"
                   }
                 ],
-                "id": 5209,
+                "id": 5412,
                 "name": "ParameterList",
                 "src": "261:9:3"
               },
@@ -477,7 +477,7 @@
                 "children": [
                   {
                     "attributes": {
-                      "functionReturnParameters": 5209
+                      "functionReturnParameters": 5412
                     },
                     "children": [
                       {
@@ -491,22 +491,22 @@
                           "type": "int_const 1",
                           "value": "1"
                         },
-                        "id": 5210,
+                        "id": 5413,
                         "name": "Literal",
                         "src": "292:1:3"
                       }
                     ],
-                    "id": 5211,
+                    "id": 5414,
                     "name": "Return",
                     "src": "285:8:3"
                   }
                 ],
-                "id": 5212,
+                "id": 5415,
                 "name": "Block",
                 "src": "275:25:3"
               }
             ],
-            "id": 5213,
+            "id": 5416,
             "name": "FunctionDefinition",
             "src": "168:132:3"
           },
@@ -520,7 +520,7 @@
                 null
               ],
               "name": "getPriceETH",
-              "scope": 5222,
+              "scope": 5425,
               "stateMutability": "view",
               "virtual": false,
               "visibility": "public"
@@ -533,7 +533,7 @@
                   ]
                 },
                 "children": [],
-                "id": 5214,
+                "id": 5417,
                 "name": "ParameterList",
                 "src": "326:2:3"
               },
@@ -544,7 +544,7 @@
                       "constant": false,
                       "mutability": "mutable",
                       "name": "",
-                      "scope": 5221,
+                      "scope": 5424,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -556,17 +556,17 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 5215,
+                        "id": 5418,
                         "name": "ElementaryTypeName",
                         "src": "350:7:3"
                       }
                     ],
-                    "id": 5216,
+                    "id": 5419,
                     "name": "VariableDeclaration",
                     "src": "350:7:3"
                   }
                 ],
-                "id": 5217,
+                "id": 5420,
                 "name": "ParameterList",
                 "src": "349:9:3"
               },
@@ -574,7 +574,7 @@
                 "children": [
                   {
                     "attributes": {
-                      "functionReturnParameters": 5217
+                      "functionReturnParameters": 5420
                     },
                     "children": [
                       {
@@ -588,32 +588,32 @@
                           "type": "int_const 1",
                           "value": "1"
                         },
-                        "id": 5218,
+                        "id": 5421,
                         "name": "Literal",
                         "src": "376:1:3"
                       }
                     ],
-                    "id": 5219,
+                    "id": 5422,
                     "name": "Return",
                     "src": "369:8:3"
                   }
                 ],
-                "id": 5220,
+                "id": 5423,
                 "name": "Block",
                 "src": "359:25:3"
               }
             ],
-            "id": 5221,
+            "id": 5424,
             "name": "FunctionDefinition",
             "src": "306:78:3"
           }
         ],
-        "id": 5222,
+        "id": 5425,
         "name": "ContractDefinition",
         "src": "138:248:3"
       }
     ],
-    "id": 5223,
+    "id": 5426,
     "name": "SourceUnit",
     "src": "32:355:3"
   },
@@ -623,7 +623,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-07-03T17:51:37.353Z",
+  "updatedAt": "2021-07-04T19:00:45.551Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

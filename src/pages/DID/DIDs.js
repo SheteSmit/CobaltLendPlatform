@@ -1,5 +1,5 @@
 const DIDs = () => {
-  return <div>My testing suite</div>;
-};
+  return <div>My testing suite</div>
+}
 
-export default DIDs;
+export default DIDs

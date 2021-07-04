@@ -1,5 +1,5 @@
 const Loan = () => {
-  return <div>Loan</div>;
-};
+  return <div>Loan</div>
+}
 
-export default Loan;
+export default Loan

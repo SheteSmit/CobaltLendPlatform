@@ -1,0 +1,89 @@
+header {
+  /* background-color: white !important; */
+}
+
+.navgroup {
+  background: none;
+}
+
+.nav-item a {
+  color: black;
+}
+
+.nav-item {
+  padding-left: 15%;
+}
+
+.navbtn {
+  border: 1px solid linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+  border-radius: 12px;
+  background: #e7e6e6;
+  color: black;
+  font-size: 14px;
+  display: block;
+  cursor: pointer;
+  margin: 1rem;
+  padding: 4px 8px;
+  height: 36px;
+  font-weight: 500;
+  border: none;
+}
+
+.navbar-nav {
+  flex-direction: row !important;
+}
+
+.nav-logo {
+  /* margin-left: 30%; */
+}
+
+.tour {
+  background: #ccf4ef;
+  color: orange;
+  font-weight: 700;
+}
+
+.eth {
+  background: white;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.dropdown-menu {
+  top: 120% !important;
+  right: 0%;
+  left: -200% !important;
+}
+
+.settings {
+  font-size: 20px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: lightgray;
+}
+
+.settings a {
+  padding-top: 0% !important;
+}
+
+.cblt {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 12px;
+  white-space: nowrap;
+  width: 100%;
+  cursor: pointer;
+  color: white;
+  padding: 4px 8px;
+  height: 36px;
+  font-weight: 500;
+  border: none;
+  background-color: #0093e9;
+  background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+}

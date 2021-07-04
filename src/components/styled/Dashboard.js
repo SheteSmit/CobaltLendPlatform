@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Card, Avatar } from '@material-ui/core';
+import styled from "styled-components"
+import { Card, Avatar } from "@material-ui/core"
 
 //Better for Wrapped Content
 export const SpaceAroundRow = styled.div`
@@ -8,8 +8,7 @@ export const SpaceAroundRow = styled.div`
   justify-content: space-between;
   padding: 0 3% 0 3%;
   margin: 2% 0 2% 0;
-`;
-
+`
 
 export const StyledCard = styled(Card)`
   border-radius: 10px;
@@ -23,7 +22,7 @@ export const StyledCard = styled(Card)`
     color: black;
     font-size: 18px;
   }
-`;
+`
 export const StyledCardHeightFit = styled(Card)`
   border-radius: 10px;
   flex-wrap: wrap;
@@ -37,29 +36,29 @@ export const StyledCardHeightFit = styled(Card)`
     color: black;
     font-size: 18px;
   }
-`;
+`
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
-`;
+`
 export const Col = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1%;
-`;
+`
 
 export const StyledAvatar = styled(Avatar)`
   background-color: ${(props) => props.inputColor} !important;
-`;
+`
 
 export const Container = styled.div`
-  margin-top: 4%;
-`;
+  // margin-top: 4%;
+`
 
 export const CobaltContainer = styled.div`
   display: flex;
   padding: 3%;
-`;
+`
 
 export const CobaltCard = styled(Card)`
   h3 {
@@ -72,4 +71,4 @@ export const CobaltCard = styled(Card)`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-`;
+`

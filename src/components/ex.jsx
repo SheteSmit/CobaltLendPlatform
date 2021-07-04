@@ -1,49 +1,42 @@
-import React, { useState } from 'react';
-import Gear from '../icons/settings.svg';
-import Arrow from '../icons/arrow-down.svg';
-import Down from '../icons/chevron-down.svg';
-import CHC from '../abis/CHCToken.json';
-import Wood from '../abis/WoodToken.json';
-import Smit from '../abis/SmitCoin.json';
-import Slick from '../abis/Token.json';
-import './exchange.css';
-import { useForm } from 'react-hook-form';
-import Chromium from '../abis/Chromium.json';
-import Web3 from 'web3';
+import React, { useState } from "react"
+import Gear from "../icons/settings.svg"
+import Arrow from "../icons/arrow-down.svg"
+import Down from "../icons/chevron-down.svg"
+import CHC from "../abis/CHCToken.json"
+import Wood from "../abis/WoodToken.json"
+import Smit from "../abis/SmitCoin.json"
+import Slick from "../abis/Token.json"
+// +
+import { useForm } from "react-hook-form"
+import Chromium from "../abis/Chromium.json"
+import Web3 from "web3"
 
 function Swap(props) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm()
   async function submit(data) {
-    console.log(data);
-    const web3 = new Web3(window.ethereum);
-    const networkId = await web3.eth.net.getId();
-    web3.eth.defaultAccount = props.account;
+    console.log(data)
+    const web3 = new Web3(window.ethereum)
+    const networkId = await web3.eth.net.getId()
+    web3.eth.defaultAccount = props.account
     const token = new web3.eth.Contract(
       Chromium.abi,
       Chromium.networks[networkId].address
-    );
+    )
 
-    const coin1 = await getToken(data.coin1);
-    let coin2 = await getToken(data.coin2);
-    const coin1Address = coin1.networks[networkId].address;
-    const coin2Address = coin2.networks[networkId].address;
+    const coin1 = await getToken(data.coin1)
+    let coin2 = await getToken(data.coin2)
+    const coin1Address = coin1.networks[networkId].address
+    const coin2Address = coin2.networks[networkId].address
     let x = await token.methods
-      .getExpectedReturn(
-        coin1Address,
-        coin2Address,
-        parseInt(data.amount),
-        10,
-        0
-      )
+      .getExpectedReturn(coin1Address, coin2Address, parseInt(data.amount), 10, 0)
       .send({ from: props.account })
-      .then((x) => console.log(x));
-    console.log(x);
+      .then((x) => console.log(x))
+    console.log(x)
   }
   return (
     <>
       <form onSubmit={handleSubmit(submit)}>
-
-        <div className="cardtitle ml-4 mt-2 mb-3 mr-4">
+        {/* <div className="cardtitle ml-4 mt-2 mb-3 mr-4">
           <h5>Swap</h5>
           <img alt="gear" src={Gear} />
         </div>
@@ -96,21 +89,21 @@ function Swap(props) {
         </div>
         <div className="swapbtn">
           <input type="submit" />
-        </div>
+        </div> */}
       </form>
     </>
-  );
+  )
 }
 
-export default Swap;
+export default Swap
 
 async function getToken(str) {
   switch (str) {
-    case 'CHC':
-      return CHC;
-    case 'Wood':
-      return Wood;
-    case 'Slick':
-      return Slick;
+    case "CHC":
+      return CHC
+    case "Wood":
+      return Wood
+    case "Slick":
+      return Slick
   }
 }

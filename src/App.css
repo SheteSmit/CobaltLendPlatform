@@ -1,3 +1,35 @@
-body {
-  background-color: whitesmoke !important;
+body,
+html {
+  box-sizing: content-box;
+  /* height: 100vh; */
+
+  /* display: block;
+overflow: auto;
+/* } */
 }
+@font-face {
+  font-family: "Nunito";
+  src: local("Nunito"),
+    url("./assets/fonts/Nunito-Regular.ttf") format("truetype"),
+    url("./assets/fonts/Nunito-ExtraBold.ttf") format("truetype"),
+    url("./assets/fonts/Nunito-Light.ttf") format("truetype"),
+    url("./assets/fonts/Nunito-ExtraLight.ttf") format("truetype"),
+    url("./assets/fonts/Nunito-SemiBold.ttf") format("truetype"),
+    url("./assets/fonts/Nunito-Italic.ttf") format("truetype"),
+    url("./assets/fonts/Nunito-ExtraBoldItalic.ttf") format("truetype");
+  font-weight: normal;
+}
+
+/* .test::before {
+  content: "";
+  background-image: url('../../assets/cobaltdark.png');
+  background-size: 600px 600px;
+  background-position: center;
+  opacity: 0.2;
+  position: absolute;
+  background-repeat: no-repeat;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+} */

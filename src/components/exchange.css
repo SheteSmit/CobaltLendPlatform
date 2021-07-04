@@ -1,28 +1,29 @@
 .swapwrapper {
-    display: flex;
-    justify-content: center;
-    background-color: whitesmoke;
+  display: flex;
+  justify-content: center;
+  background-color: whitesmoke;
 }
 
 .swapcard {
-    background: white;
-    border-radius: 12px;
-    height: auto;
-    width: 500px;
-    padding: 2% 1%;
+  background: white;
+  border-radius: 12px;
+  height: auto;
+  width: 500px;
+  padding: 2% 1%;
 }
 
 .cardtitle {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
-.swapfrom, .swapto {
-    display: flex;
-    align-items: center;
-    border: 2px solid whitesmoke;
-    border-radius: 12px;
-    padding: 4%;
+.swapfrom,
+.swapto {
+  display: flex;
+  align-items: center;
+  border: 2px solid whitesmoke;
+  border-radius: 12px;
+  padding: 4%;
 }
 
 .form-input {
@@ -39,109 +40,109 @@
 }
 
 .balance {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .balancediv p {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .balancediv {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px !important;
 }
 
 /* Modal  */
 .modal-content {
-    border-radius: 20px !important;
-    width: 60% !important;
-    margin: 0 auto;
+  border-radius: 20px !important;
+  width: 60% !important;
+  margin: 0 auto;
 }
 
 .modalinput {
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 12px;
-    font-size: 20px;
-    width: 150%;
-    padding: 4%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  font-size: 20px;
+  width: 150%;
+  padding: 4%;
 }
 
-.modalinput:focus, .modalinput:hover {
-    border: 2px solid #80D0C7;
-    outline: none;
+.modalinput:focus,
+.modalinput:hover {
+  border: 2px solid #80d0c7;
+  outline: none;
 }
 
 .modalbtngroup {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .divbtngroup {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 .btngroup {
-    background: transparent;
-    border: none;
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
 }
 
 .divbtngroup:hover {
-    background: rgb(188, 236, 231, 0.2);
+  background: rgb(188, 236, 231, 0.2);
 }
 
 /* Modal End  */
 
 .downarrow {
-    display: block;
-    padding-top: 4%;
-    padding-bottom: 4%;
-    margin: 0 auto;;
+  display: block;
+  padding-top: 4%;
+  padding-bottom: 4%;
+  margin: 0 auto;
 }
 
 .swaptobtn {
-    display: block;
-    align-items: center;
-    height: 2.2rem;
-    font-size: 20px;
-    background-color: #0093E9;
-    color: rgb(255, 255, 255);
-    border-radius: 12px;
-    box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
-    outline: none;
-    cursor: pointer;
-    user-select: none;
-    border: none;
-    width: max-content;
+  display: block;
+  align-items: center;
+  height: 2.2rem;
+  font-size: 20px;
+  background-color: #0093e9;
+  color: rgb(255, 255, 255);
+  border-radius: 12px;
+  box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  width: max-content;
 }
 
 .swapconfirmbtn {
-    display: block;
-    background-color: rgb(237, 238, 242);
-    color: rgb(136, 141, 155);
-    cursor: auto;
-    box-shadow: none;
-    border: 1px solid transparent;
-    border-radius: 12px;
-    outline: none;
-    padding: 2% 28%;
-    opacity: 1;
-    margin: 0 auto;
-    font-size: 24px;
-    text-align: center;
-
+  display: block;
+  background-color: rgb(237, 238, 242);
+  color: rgb(136, 141, 155);
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  outline: none;
+  padding: 2% 28%;
+  opacity: 1;
+  margin: 0 auto;
+  font-size: 24px;
+  text-align: center;
 }
 
 .tokenbtn {
-    display: flex;
-    font-size: 1.5rem;
-    background: whitesmoke;
-    border-radius: 12px;
-    align-items: center;
-    border: none;
+  display: flex;
+  font-size: 1.5rem;
+  background: whitesmoke;
+  border-radius: 12px;
+  align-items: center;
+  border: none;
 }

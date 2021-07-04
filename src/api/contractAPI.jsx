@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"
 // import Web3 from "web3";
 // import CHC from "../abis/CHCToken.json";
 // import Wood from "../abis/WoodToken.json";
@@ -8,19 +8,19 @@ import { useState } from "react";
 // import Bank from "../abis/Bank.json";
 
 function ContractAPI() {
-  const [contract, setContract] = useState([]);
+  const [contract, setContract] = useState([])
   // const [abiArr] = useState([]);
   // const [symbol, setSymbol] = useState([]);
   // const [token, setToken] = useState([]);
   // const [tokenName] = useState([]);
   // const [input] = useState(0);
-  const [coinAddress, setCoinAddress] = useState([]);
-  const [callback, setCallback] = useState(false);
-  const [account, setAccount] = useState(false);
-  const [balance, setBalance] = useState(false);
-  const [web3, setWeb3] = useState(false);
+  const [coinAddress, setCoinAddress] = useState([])
+  const [callback, setCallback] = useState(false)
+  const [account, setAccount] = useState(false)
+  const [balance, setBalance] = useState(false)
+  const [web3, setWeb3] = useState(false)
   // const [setResponse] = useState();
-  const [allContracts, setAllContracts] = useState(false);
+  const [allContracts, setAllContracts] = useState(false)
 
   //Send token
   // const sendAmount = async () => {
@@ -231,7 +231,7 @@ function ContractAPI() {
     account: [account, setAccount],
     balance: [balance, setBalance],
     web3: [web3, setWeb3],
-  };
+  }
 }
 
-export default ContractAPI;
+export default ContractAPI

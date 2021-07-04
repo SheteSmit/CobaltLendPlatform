@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import Web3 from "web3";
+import { useState, useEffect } from "react"
+import Web3 from "web3"
 
 function OracleAPI() {
-  const [token, setToken] = useState([]);
-  const [callback, setCallback] = useState(false);
-  const [web3, setWeb3] = useState(false);
-  const [allContracts, setAllContracts] = useState(false);
+  const [token, setToken] = useState([])
+  const [callback, setCallback] = useState(false)
+  const [web3, setWeb3] = useState(false)
+  const [allContracts, setAllContracts] = useState(false)
 
   const testOracle = async () => {
     // if (this.state.token !== "undefined") {
@@ -23,13 +23,10 @@ function OracleAPI() {
     //   }
     // }
   }
-  
-  useEffect(() => {
-  }, []);
 
-  return {
-    
-  };
+  useEffect(() => {}, [])
+
+  return {}
 }
 
-export default OracleAPI;
+export default OracleAPI
