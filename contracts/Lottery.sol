@@ -1,73 +1,89 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-import "./interfaces/Ownable.sol";
-import "./interfaces/IERC20.sol";
 import "./interfaces/SafeMath.sol";
-import "./interfaces/UniversalERC20.sol";
 import "./ExchangeOracle.sol";
 import "./NFTLoan.sol";
 
 contract Lottery {
-
     /**
-     * @dev Variable of address of the API
+     * @dev Address of the API used for blockchain data migration
      */
     address private API;
-    
+
     /**
-     * @dev Variable gives the lottery status 
+     * @dev Address of dev panel
+     */
+    address private Oracle;
+
+    /**
+     * @dev Address of the NFT
+     */
+    address private NFT;
+
+    /**
+     * @dev Bool stores status for lottery. True - on / False - off.
      */
     bool public lotteryStatus;
-    
+
     /**
-     * @dev Variable that gives the total fee balance of the lottery
+     * @dev Variable stores all ether collected from ticket purchases.
      */
     uint256 totalFeeBalance;
-    
+
     /**
-     * @dev Function sets the Api of the address
+     * @dev Function sets the address of the API
+     * @notice This action can only be perform under dev vote.
      */
     function setAPI(address _newAPI) public {
         API = _newAPI;
     } // Only dev contract // Deployed on Binance
-    
+
     /**
      * @dev Function sets the status of the lottery
+     * @notice This action can only be perform under dev vote.
      */
     function setLottery(bool _status) public {
         lotteryStatus = _status;
     } // Only dev contract // Deployed on Binance
 
-    // ****************************** Lottery - Staking ******************************
+    /**
+     * @dev Modifier restricts access to only API as msg.sender
+     */
+    modifier onlyAPI {
+        require(msg.sender == API, "Access denied");
+        _;
+    }
 
+    constructor(address _oracle, address _NFT) {
+        Oracle = _oracle;
+        NFT = _NFT;
+    }
+
+    // ****************************** Lottery - Staking ******************************
+    /**
+     * @dev Limit cap for API bot to handle lottery updating on ethereum chain
+     */
     uint256 lotteryTicketCap;
 
+    /**
+     * @dev Struct saving ticket information
+     */
     struct Lotteryticket {
         address[] participants;
         address[] winners;
-        uint256 lotteryType;
         uint256 dateLimit;
         uint256 fee;
-        bool pickedWinners;
+        bool transferedChain;
     }
 
-    mapping(uint256 => Lotteryticket) lotteryBook;
-    
     /**
-     * @dev Function gets lottery tickets and returns 
-     * address of lottery ticket participants
+     * @dev Mapping key value uint leads to information on respective lottery ticket
      */
-    function getLotteryParticipants(uint256 _lotteryTicket)
-        public
-        view
-        returns (address[] memory)
-    {
-        return lotteryBook[_lotteryTicket].participants;
-    }
-    
+    mapping(uint256 => Lotteryticket) public lotteryBook;
+
     /**
-     * @dev Function gets winning lottery ticket and returns winning lottery 
+     * @dev Function gets winning lottery ticket and returns winning lottery
      * tickets address
      */
     function getLotteryWinners(uint256 _lotteryTicket)
@@ -75,101 +91,119 @@ contract Lottery {
         view
         returns (address[] memory)
     {
+        require(
+            lotteryBook[_lotteryTicket].transferedChain == false,
+            "This information is already been transfered over to ethereum"
+        );
         return lotteryBook[_lotteryTicket].winners;
     }
-    
+
     /**
      * @dev Modifier gives parameters of a valid lottery ticket
      */
     modifier validEntry(uint256 _lotteryTicket) {
-        require(lotteryStatus == true, "Lottery is currently offline");
+        require(lotteryStatus == true, "Lottery is currently offline.");
+
         require(
-            lotteryBook[_lotteryTicket].dateLimit < block.timestamp,
-            "Ticket does not exist"
+            lotteryTicketCap == _lotteryTicket &&
+                lotteryBook[_lotteryTicket].dateLimit < block.timestamp,
+            "This ticket does not exist or is not currently active."
         );
 
         require(
             msg.value >= lotteryBook[_lotteryTicket].fee,
-            "Value sent is less than ticket price"
+            "Value sent is less than ticket price."
         );
         _;
     }
-    
+
     /**
      * @dev Function creates a ticket for the lottery system
+     * @notice This action can only be perform under dev vote.
      */
     function createTicket(
-        uint256 _numParticipants,
         uint256 _numWinners,
         uint256 _feePrice,
-        uint256 _dateLimit,
-        uint256 _lotteryType
+        uint256 _dateLimit
     ) public {
-        // Staking _numParticipants must be 0
         lotteryBook[lotteryTicketCap] = Lotteryticket(
-            new address[](_numParticipants),
+            new address[](0),
             new address[](_numWinners),
-            _lotteryType,
             SafeMath.add(block.timestamp, _dateLimit),
             _feePrice,
             false
         );
+        lotteryTicketCap = SafeMath.add(lotteryTicketCap, 1);
     } // Only dev contract // Deployed on Binance
-    
-    
-    function buyStakingTicket(uint256 _lotteryTicket)
-        public
-        payable
-        validEntry(_lotteryTicket)
-    {
-        lotteryBook[_lotteryTicket].participants.push(msg.sender);
-        totalFeeBalance = SafeMath.add(totalFeeBalance, msg.value);
-    }
-    
+
     /**
-     * @dev Function allows user to buy open slot of a lottery ticket
+     * @dev
+     * @notice This action can only be perform by the API.
      */
-    function buyLotteryTicket(uint256 _lotteryTicket, uint256 _slotNumber)
-        public
-        payable
-        validEntry(_lotteryTicket)
-    {
-        require(
-            _slotNumber < lotteryBook[_lotteryTicket].participants.length,
-            "Slot number is above supported"
-        );
-        require(
-            lotteryBook[_lotteryTicket].participants[_slotNumber] !=
-                address(0x0),
-            "Slot is taken already"
-        );
-        lotteryBook[_lotteryTicket].participants[_slotNumber] = msg.sender;
+    function setTicketStatus(uint256 _ticketQuery) public onlyAPI {
+        lotteryBook[_ticketQuery].transferedChain = true;
+    }
+
+    /**
+     * @dev Function purchases a ticket and records user address as lottery
+     * participant
+     */
+    function buyStakingTicket() public payable validEntry(lotteryTicketCap) {
+        lotteryBook[lotteryTicketCap].participants.push(msg.sender);
         totalFeeBalance = SafeMath.add(totalFeeBalance, msg.value);
     }
-    
+
     /**
      * @dev Function changes the status of lottery ticket to the winner
      */
-    function setLotteryWinners(
-        uint256[] memory _winnerIndex,
-        uint256 _lotteryTicket
-    ) public {
+    function setLotteryWinners(uint256[] memory _winnerIndex) public onlyAPI {
+        uint256 currentTicket = lotteryTicketCap;
+
         require(
-            lotteryBook[_lotteryTicket].pickedWinners == false,
+            lotteryBook[currentTicket].transferedChain == false,
             "Winners have already been picked."
         );
+
         for (uint256 i = 0; i < _winnerIndex.length; i++) {
-            lotteryBook[_lotteryTicket].winners.push(
-                lotteryBook[_lotteryTicket].participants[i]
+            lotteryBook[currentTicket].winners.push(
+                lotteryBook[currentTicket].participants[_winnerIndex[i]]
             );
         }
-        lotteryBook[_lotteryTicket].pickedWinners = true;
     } // Only dev contract // Deployed on Binance
 
     // ************************** Contract fee withdraw *************************
-    
     /**
-     * @dev Withdraw funds of the lottery
+     * @dev Address stores the secondary recipient to withdraw funds from fees
+     * collected
      */
-    function withdrawFunds() public payable {}
+    address secondaryRecipient;
+
+    /**
+     * @dev Set secondary recipient for fee withdraw
+     */
+    function setSecondaryRecipient(address _newRecipient) public {
+        secondaryRecipient = _newRecipient;
+    }
+
+    /**
+     * @dev Withdraws a set amount of ether to fund API wallet
+     */
+    function fundAPI(uint256 _amount) public payable {
+        require(
+            _amount <= totalFeeBalance,
+            "Amount is higher than available ether balance."
+        );
+        payable(msg.sender).transfer(_amount);
+    }
+
+    /**
+     * @dev Withdraw funds for secondary contracts
+     */
+    function fundSecondary(uint256 _amount) public payable {
+        require(
+            _amount <= totalFeeBalance,
+            "Amount is higher than available ether balance."
+        );
+        payable(secondaryRecipient).transfer(_amount);
+    }
 }
