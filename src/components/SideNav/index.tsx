@@ -33,7 +33,6 @@ import staking from '../../assets/staking.gif'
 import chromium from '../../assets/chromium.gif'
 import rocketAnimated from '../../assets/rocketAnimated.gif'
 
-
 const styles = {
   catalyst: {
     width: 24,

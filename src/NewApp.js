@@ -1,36 +1,31 @@
 /* eslint-disable */
-import Web3 from "web3"
-import Bank from "./abis/Bank.json"
-import CHC from "./abis/CHCToken.json"
-import Wood from "./abis/WoodToken.json"
-import Smit from "./abis/SmitCoin.json"
-import Slick from "./abis/Token.json"
-import Ham from "./abis/HAM.json"
-import { useState, useEffect } from "react"
-import Router from "./Router/Router"
-import { Link } from "react-router-dom"
-import Sidebar from "./components/Sidebar"
-import { BrowserRouter, Switch, Route } from "react-router-dom"
+import Web3 from "web3";
+import Bank from "./abis/Bank.json";
+import { useState, useEffect } from "react";
+import Router from "./Router/Router";
+import { Link } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 // import styled, { ThemeProvider } from "styled-components";
-import styled from "styled-components"
-import { makeStyles, ThemeProvider, Box } from "@material-ui/core"
-import NavBar from "./components/NavBar"
-import { theme } from "./theme/theme"
-import SideNav from "./components/SideNav"
-import SelectComponent from "./pages/Dashboard/ConnectWallet"
-import useWindowSize from "./hooks/useWindowSize"
-import { useMetaMask } from "metamask-react"
-import ConnectWallet from "./pages/Dashboard/ConnectWallet"
-import detectEthereumProvider from "@metamask/detect-provider"
-import { MuiPickersUtilsProvider } from "@material-ui/pickers"
-import MomentUtils from "@date-io/moment"
+import styled from "styled-components";
+import { makeStyles, ThemeProvider, Box } from "@material-ui/core";
+import NavBar from "./components/NavBar";
+import { theme } from "./theme/theme";
+import SideNav from "./components/SideNav";
+import SelectComponent from "./pages/Dashboard/ConnectWallet";
+import useWindowSize from "./hooks/useWindowSize";
+import { useMetaMask } from "metamask-react";
+import ConnectWallet from "./pages/Dashboard/ConnectWallet";
+import detectEthereumProvider from "@metamask/detect-provider";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 import {
   addContract,
   setAccount,
   addNetId,
   addWeb3Instance,
-} from "./redux/reducers/blockchainReducer"
-import { useAppDispatch, useAppSelector } from "./hooks/"
+} from "./redux/reducers/blockchainReducer";
+import { useAppDispatch, useAppSelector } from "./hooks/";
 
 // const theme = {
 //   grayText: "#6b7774",
@@ -51,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
   },
-}))
+}));
 
-export const TestContext = React.createContext()
+export const TestContext = React.createContext();
 
 export default function NewApp() {
   const [state, setState] = useState({
@@ -63,39 +58,39 @@ export default function NewApp() {
     web3: undefined,
     balance: undefined,
     accountAddress: undefined,
-  })
+  });
   // const [contractTEST, setContract] = useState(() =>createNewInstance())
-  const [netId, setNetId] = useState(null)
-  const [account, setAccount] = useState(null)
-  const [stateWeb3, setWeb3] = useState(null)
-  const [sToken, setToken] = useState(null)
-  const [sCoinAddress, setCoinAddress] = useState(null)
-  const [balance, setBalance] = useState(null)
-  const [allContracts, setAllContracts] = useState(null)
-  const dispatch = useAppDispatch()
-  const web3 = new Web3(window.ethereum)
+  const [netId, setNetId] = useState(null);
+  const [account, setAccount] = useState(null);
+  const [stateWeb3, setWeb3] = useState(null);
+  const [sToken, setToken] = useState(null);
+  const [sCoinAddress, setCoinAddress] = useState(null);
+  const [balance, setBalance] = useState(null);
+  const [allContracts, setAllContracts] = useState(null);
+  const dispatch = useAppDispatch();
+  const web3 = new Web3(window.ethereum);
 
-  const { width } = useWindowSize()
+  const { width } = useWindowSize();
 
-  const classes = useStyles()
+  const classes = useStyles();
 
-  let currentAccount = null
+  let currentAccount = null;
 
   const getMetaMaskData = async () => {
     try {
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await web3.eth.getAccounts();
       setState({
         ...state,
         metaMask: accounts,
-      })
+      });
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
-    getMetaMaskData()
-  }, [])
+    getMetaMaskData();
+  }, []);
 
   async function loadBlockchainData() {
     if (typeof window.ethereum !== "undefined") {
@@ -106,33 +101,33 @@ export default function NewApp() {
         .catch((err) => {
           // For backwards compatibility reasons, if no accounts are available,
           // eth_accounts will return an empty array.
-          console.error(err)
-        })
+          console.error(err);
+        });
 
       // Current ethereum object
       // const web3 = new Web3(window.ethereum)
 
       // Current Metamask network in use
-      const netId = await web3.eth.net.getId()
+      const netId = await web3.eth.net.getId();
       switch (netId) {
         case 1:
-          console.log("This is mainnet")
-          break
+          console.log("This is mainnet");
+          break;
         case 4:
-          console.log("This is the Rinkeby test network.")
-          break
+          console.log("This is the Rinkeby test network.");
+          break;
         case 5777:
-          console.log("This is the Ganache test network.")
-          break
+          console.log("This is the Ganache test network.");
+          break;
         default:
-          console.log("This is an unknown network.")
+          console.log("This is an unknown network.");
       }
 
       // Current Metamask Account
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await web3.eth.getAccounts();
 
       if (typeof accounts[0] !== "undefined") {
-        const bal = await web3.eth.getBalance(accounts[0])
+        const bal = await web3.eth.getBalance(accounts[0]);
         // const contract = new web3.eth.Contract(Bank.abi, Bank.networks[netId].address)
         // dispatch(addContract(contract))
         // dispatch(setAccount(accounts[0]))
@@ -142,15 +137,15 @@ export default function NewApp() {
           netId: accounts,
           accountAddress: accounts[0],
           balance: bal,
-        })
+        });
       } else {
-        window.alert("Please login with MetaMask")
+        window.alert("Please login with MetaMask");
       }
-      loadContracts(web3)
+      loadContracts(web3);
     }
     // If Metmask is not detected
     else {
-      window.alert("Please install MetaMask")
+      window.alert("Please install MetaMask");
     }
   }
 
@@ -159,9 +154,9 @@ export default function NewApp() {
   function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
       // MetaMask is locked or the user has not connected any accounts
-      console.log("Please connect to MetaMask.")
+      console.log("Please connect to MetaMask.");
     } else if (accounts[0] !== currentAccount) {
-      currentAccount = accounts[0]
+      currentAccount = accounts[0];
     }
   }
 
@@ -182,19 +177,19 @@ export default function NewApp() {
         </TestContext.Provider>
       </MuiPickersUtilsProvider>
     </ThemeProvider>
-  )
+  );
 }
 const SRouter = styled(Router)`
   // margin-right: 240px;
-`
+`;
 
 async function getToken(str) {
   switch (str) {
     case "CHC":
-      return CHC
+      return CHC;
     case "Wood":
-      return Wood
+      return Wood;
     case "Slick":
-      return Slick
+      return Slick;
   }
 }
