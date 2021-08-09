@@ -79,7 +79,7 @@ module.exports = {
   contracts_build_directory: "./src/abis/",
   compilers: {
     solc: {
-      version: ">=0.6.0 <0.8.0",
+      version: ">=0.6.0 <0.9.0",
       parser: "solcjs", // Leverages solc-js purely for speedy parsing
       settings: {
         optimizer: {

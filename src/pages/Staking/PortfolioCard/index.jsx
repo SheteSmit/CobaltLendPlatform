@@ -184,10 +184,11 @@ export default function PortfolioCard() {
                 </>
               </Box>
               <Typography variant="h4" className={classes.cobaltAmount}>
-                {/* {Math.trunc(stakingStore.userData[1] / 1000000000000000000)} CBLT */}
+                {/* {Math.trunc(stakingStore.userData[1] / 1000000000000000000)}{" "} */}
+                {/* CBLT */}
               </Typography>
               <Typography variant="h4" className={classes.cobaltAmount}>
-                {Math.trunc(stakingStore.estimateReturnStakingUSD)} In USD
+                {Math.trunc(stakingStore.estimateReturnUSD)} In USD
               </Typography>
               <Box className={classes.timeStartedContainer}>
                 <Typography variant="h4" className={classes.variants}>
@@ -206,7 +207,7 @@ export default function PortfolioCard() {
                 label="Withdraw"
                 fn={() => stakingStore.withdraw()}
                 disabled={
-                  stakingStore.startStakingDate < stakingStore.endStakingDate ||
+                  Date.now() < stakingStore.endStakingDate ||
                   (stakingStore.userData[0] / 1000000000000000000).toFixed(5) ==
                     0
                 }

@@ -12,7 +12,7 @@ export function createStakingStore() {
   return {
     // Metamask data
     chainId: "eth",
-    address: null,
+    address: "",
     cblt: "0x29a99c126596c0Dc96b02A88a9EAab44EcCf511e",
     // Staking contract data
     stakingContract: null,
@@ -193,8 +193,13 @@ export function createStakingStore() {
           .call({ from: this.address });
 
         this.cbltReward = response;
+        console.log(this.cbltReward);
+
         let CBLTtoUSD = await this.stakingContract.methods
-          .getEstimateUSD(response.toString(), this.cblt)
+          .getEstimateUSD(
+            (this.userData[1] / 1000000000000000000).toString(),
+            this.cblt
+          )
           .call();
         this.estimateReturnUSD = CBLTtoUSD;
       } catch (e) {
@@ -268,6 +273,7 @@ export function createStakingStore() {
           .getUser(this.address)
           .call();
         this.userData = results;
+        console.log(this.userData);
         let tierCombination = await this.stakingContract.methods
           .getTierCombination(results[4], results[3])
           .call();
