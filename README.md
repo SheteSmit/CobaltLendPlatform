@@ -1,3 +1,13 @@
+# ABOUT THIS REPO
+This repository contains the contents of the https://www.cobaltlend.io/ platform which was designed to be a decentralized lending and borrowing platform based on user voting, and a token exchange via the ethereum and binance blockchain. The platform utilizes NFTs on either blockchain to authenticate users and store valuable information.
+
+# My Personal Contributions
+- Creator and Primary lead on the NFTLoan.sol contract:
+	- Facilitates the miniting of NFTs for borrowers, storage of user information, safeTransfer of the token, and striking and removal of the users token if 	   they failed to follow regulations.
+- Within the Bank.sol contract worked on the NFTLoan portion:
+	- Similar NFTs are minted for voters over the Binance Blockchain (cheaper than Ethereum) to hold basic information for authentication to the platform.
+- Worked on some edits and bug fixes in the ChromiumV2.sol and Bank.sol contracts.
+
 
 # Cobalt Lend
 
